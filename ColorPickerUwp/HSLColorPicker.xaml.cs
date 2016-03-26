@@ -43,7 +43,7 @@ namespace ColorPickerUwp
             for (int a = 0; a <= 360; a+= 1)
             {
                 float weight = a / 360f;
-                var c = HslToRgba(new Vector4(weight, 1, 0.5f, 1));
+                var c = FromHSL(new Vector4(weight, 1, 0.5f, 1));
                 var stop = new GradientStop() { Color = c, Offset = weight };
                 HueGradient.GradientStops.Add(stop);
             }
@@ -130,25 +130,25 @@ namespace ColorPickerUwp
         private void UpdatePreview()
         {
             var previewHSLA = new Vector4((float)(this.Hue / 360), (float)this.Saturation, (float)this.Lightness, 1);
-            this.Color = HslToRgba(previewHSLA);
+            this.Color = FromHSL(previewHSLA);
         }
 
         private void UpdateSaturation()
         {
             if (this.SaturationGradient == null) return;
             var hsla = new Vector4((float)(this.Hue / 360), 0, (float)this.Lightness, 1);
-            this.SaturationGradient.GradientStops[0].Color = HslToRgba(hsla);
+            this.SaturationGradient.GradientStops[0].Color = FromHSL(hsla);
             hsla.Y = 1;
-            this.SaturationGradient.GradientStops[1].Color = HslToRgba(hsla);
+            this.SaturationGradient.GradientStops[1].Color = FromHSL(hsla);
         }
 
         private void UpdateLightness()
         {
             if (this.LightnessGradient == null) return;
             var hsla = new Vector4((float)(this.Hue / 360), (float)this.Saturation, 0, 1);
-            this.LightnessGradient.GradientStops[0].Color = HslToRgba(hsla);
+            this.LightnessGradient.GradientStops[0].Color = FromHSL(hsla);
             hsla.Z = 1;
-            this.LightnessGradient.GradientStops[1].Color = HslToRgba(hsla);
+            this.LightnessGradient.GradientStops[1].Color = FromHSL(hsla);
         }
     }
 }

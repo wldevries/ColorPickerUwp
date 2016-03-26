@@ -17,7 +17,7 @@ namespace ColorPickerUwp
         /// </summary>
         /// <param name="hsl">Vector4 defining X = h, Y = s, Z = l, W = a. Ranges [0, 1.0]</param>
         /// <returns>RGBA Color. Ranges [0, 255]</returns>
-        public static Color HslToRgba(Vector4 hsl)
+        public static Color FromHSL(Vector4 hsl)
         {
             float r, g, b;
 
@@ -54,7 +54,7 @@ namespace ColorPickerUwp
         /// </summary>
         /// <param name="rgba"></param>
         /// <returns></returns>
-        public static Vector4 RgbaToHsl(Color rgba)
+        public static Vector4 ToHSL(Color rgba)
         {
             float r = rgba.R / 255.0f;
             float g = rgba.G / 255.0f;
@@ -95,20 +95,20 @@ namespace ColorPickerUwp
 
         // from http://stackoverflow.com/a/1626175/62857
 
-        public static void ColorToHSV(Color color, out double hue, out double saturation, out double value)
+        public static void ToHSV(Color color, out double hue, out double saturation, out double value)
         {
             int max = Math.Max(color.R, Math.Max(color.G, color.B));
             int min = Math.Min(color.R, Math.Min(color.G, color.B));
 
             //hue = color.GetHue();
-            var hsl = RgbaToHsl(color);
+            var hsl = ToHSL(color);
             hue = hsl.X;
 
             saturation = (max == 0) ? 0 : 1d - (1d * min / max);
             value = max / 255d;
         }
 
-        public static Color ColorFromHSV(double hue, double saturation, double value)
+        public static Color FromHSV(double hue, double saturation, double value)
         {
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
             double f = hue / 60 - Math.Floor(hue / 60);
