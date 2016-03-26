@@ -8,11 +8,29 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Border Margin="50" CornerRadius="10" BorderThickness="5">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!--<ColumnDefinition/>-->
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Margin="20" Grid.Row="1">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <local:ColorMap x:Name="map"
+                        Margin="20"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+        <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">
             <Border.BorderBrush>
                 <SolidColorBrush Color="{Binding Path=Color, ElementName=picker}"/>
             </Border.BorderBrush>
             <local:HSLColorPicker x:Name="picker"/>
-        </Border>
+        </Border>-->
     </Grid>
 </Page>

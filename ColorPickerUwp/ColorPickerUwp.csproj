@@ -96,6 +96,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColorHelper.cs" />
+    <Compile Include="ColorMap.xaml.cs">
+      <DependentUpon>ColorMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HSLColorPicker.xaml.cs">
       <DependentUpon>HSLColorPicker.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ColorMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HSLColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
