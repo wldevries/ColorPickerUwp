@@ -95,17 +95,33 @@ namespace ColorPickerUwp
 
         // from http://stackoverflow.com/a/1626175/62857
 
-        public static void ToHSV(Color color, out double hue, out double saturation, out double value)
+        public static Vector4 ToHSV(Color color)
         {
-            int max = Math.Max(color.R, Math.Max(color.G, color.B));
-            int min = Math.Min(color.R, Math.Min(color.G, color.B));
+            double hue;
+            double saturation;
+            double value;
+            ToHSV(color, out hue, out saturation, out value);
+            return new Vector4((byte)(hue * 255), (byte)(saturation * 255), (byte)(value * 255), color.A / 255.0f);
+        }
+
+        public static void ToHSV(Color rgba, out double hue, out double saturation, out double value)
+        {
+            int max = Math.Max(rgba.R, Math.Max(rgba.G, rgba.B));
+            int min = Math.Min(rgba.R, Math.Min(rgba.G, rgba.B));
 
             //hue = color.GetHue();
-            var hsl = ToHSL(color);
+            var hsl = ToHSL(rgba);
             hue = hsl.X;
 
             saturation = (max == 0) ? 0 : 1d - (1d * min / max);
             value = max / 255d;
+        }
+
+        public static Color FromHSV(Vector4 hsv)
+        {
+            var c = FromHSV(hsv.X, hsv.Y, hsv.Z);
+            c.A = (byte)(hsv.W * 255);
+            return c;
         }
 
         public static Color FromHSV(double hue, double saturation, double value)
