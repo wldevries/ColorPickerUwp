@@ -77,14 +77,19 @@ namespace ColorPickerUwp
             if (image3.PointerCaptures?.Any(p => p.PointerId == e.Pointer.PointerId) == true)
             {
                 this.lastPoint = e.GetCurrentPoint(this.image3);
-                UpdateColor();
-                e.Handled = true;
+                if (UpdateColor())
+                {
+                    thumb.SetValue(Canvas.LeftProperty, lastPoint.Position.X - thumb.ActualWidth / 2);
+                    thumb.SetValue(Canvas.TopProperty, lastPoint.Position.Y - thumb.ActualHeight / 2);
+                    thumb.Visibility = Visibility.Visible;
+                    e.Handled = true;
+                }
             }
         }
 
-        private void UpdateColor()
+        private bool UpdateColor()
         {
-            if (lastPoint == null) return;
+            if (lastPoint == null) return false;
             var x = lastPoint.Position.X / image3.ActualWidth;
             var y = 1 - lastPoint.Position.Y / image3.ActualHeight;
             var selectedColor = CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
@@ -95,7 +100,10 @@ namespace ColorPickerUwp
                 this.LightnessStart.Color = Colors.White;
                 this.LightnessMid.Color = CalcWheelColor((float)x, 1 - (float)y, 0.5f);
                 this.LightnessEnd.Color = Colors.Black;
+                return true;
             }
+
+            return false;
         }
 
         private async void MeshCanvas_Loaded(object sender, RoutedEventArgs e)
