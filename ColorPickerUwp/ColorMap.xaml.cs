@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -20,6 +21,7 @@ namespace ColorPickerUwp
     public sealed partial class ColorMap : UserControl
     {
         private PointerPoint lastPoint;
+        private double colorX, colorY;
         private WriteableBitmap bmp3;
 
         private readonly LinearGradientBrush LightnessGradient;
@@ -27,15 +29,18 @@ namespace ColorPickerUwp
         private readonly GradientStop LightnessMid;
         private readonly GradientStop LightnessEnd;
 
+        private bool settingColor;
+        private bool settingLightness;
+
         public ColorMap()
         {
             this.InitializeComponent();
 
             this.Loaded += MeshCanvas_Loaded;
 
-            this.image3.PointerMoved += Image3_PointerMoved;
-            this.image3.PointerPressed += Image3_PointerPressed;
-            this.image3.PointerReleased += Image3_PointerReleased;
+            this.ellipse.PointerMoved += Image3_PointerMoved;
+            this.ellipse.PointerPressed += Image3_PointerPressed;
+            this.ellipse.PointerReleased += Image3_PointerReleased;
 
             this.LightnessGradient = new LinearGradientBrush();
             LightnessGradient.StartPoint = new Point(0, 0);
@@ -58,46 +63,86 @@ namespace ColorPickerUwp
 
         // Using a DependencyProperty as the backing store for Color.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(ColorMap), new PropertyMetadata(new Color()));
+            DependencyProperty.Register("Color", typeof(Color), typeof(ColorMap), new PropertyMetadata(new Color(), ColorChanged));
+        private bool isloaded;
+
+        private static void ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var map = d as ColorMap;
+            if (map != null && !map.settingColor)
+            {
+                var col = (Color)e.NewValue;
+                var hsl = ToHSL(col);
+
+                map.settingLightness = true;
+                map.LightnessSlider.Value = hsl.Z;
+                map.settingLightness = false;
+                map.LightnessMid.Color = FromHSL(new Vector4(hsl.X, 1, 0.5f, 1));
+
+                double angle = Math.PI * 2 * hsl.X;
+                Vector2 normalized = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                Vector2 halfSize = new Vector2(
+                    (float)map.ellipse.ActualWidth / 2,
+                    (float)map.ellipse.ActualHeight / 2);
+                Vector2 pos = (hsl.Y/2) * normalized * halfSize * new Vector2(1, -1) + halfSize;
+
+                map.colorX = pos.X;
+                map.colorY = pos.Y;
+                map.UpdateThumb();
+            }
+        }
 
         private void Image3_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            image3.CapturePointer(e.Pointer);
+            ellipse.CapturePointer(e.Pointer);
+            this.lastPoint = e.GetCurrentPoint(ellipse);
+            this.colorX = lastPoint.Position.X;
+            this.colorY = lastPoint.Position.Y;
+            this.UpdateColor();
+            this.UpdateThumb();
             e.Handled = true;
         }
 
         private void Image3_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            image3.ReleasePointerCapture(e.Pointer);
+            ellipse.ReleasePointerCapture(e.Pointer);
+            this.lastPoint = null;
             e.Handled = true;
         }
 
         private void Image3_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (image3.PointerCaptures?.Any(p => p.PointerId == e.Pointer.PointerId) == true)
+            if (ellipse.PointerCaptures?.Any(p => p.PointerId == e.Pointer.PointerId) == true)
             {
-                this.lastPoint = e.GetCurrentPoint(this.image3);
-                var bounds = new Rect(0, 0, image3.ActualWidth, image3.ActualHeight);
+                this.lastPoint = e.GetCurrentPoint(ellipse);
+                this.colorX = lastPoint.Position.X;
+                this.colorY = lastPoint.Position.Y;
+                var bounds = new Rect(0, 0, ellipse.ActualWidth, ellipse.ActualHeight);
                 if (bounds.Contains(lastPoint.Position) && UpdateColor())
                 {
-                    thumb.SetValue(Canvas.LeftProperty, lastPoint.Position.X - thumb.ActualWidth / 2);
-                    thumb.SetValue(Canvas.TopProperty, lastPoint.Position.Y - thumb.ActualHeight / 2);
-                    thumb.Visibility = Visibility.Visible;
+                    UpdateThumb();
                     e.Handled = true;
                 }
             }
         }
 
+        private void UpdateThumb()
+        {
+            Canvas.SetLeft(thumb, this.colorX - thumb.ActualWidth / 2);
+            Canvas.SetTop(thumb, this.colorY - thumb.ActualHeight / 2);
+            thumb.Visibility = Visibility.Visible;
+        }
+
         private bool UpdateColor()
         {
-            if (lastPoint == null) return false;
-            var x = lastPoint.Position.X / image3.ActualWidth;
-            var y = 1 - lastPoint.Position.Y / image3.ActualHeight;
+            if (!this.isloaded) return false;
+            var x = this.colorX / ellipse.ActualWidth;
+            var y = 1 - this.colorY / ellipse.ActualHeight;
             var selectedColor = CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
 
             if (selectedColor.A > 0)
             {
-                this.Color = selectedColor;
+                this.SetColor(selectedColor);
                 this.LightnessStart.Color = Colors.White;
                 this.LightnessMid.Color = CalcWheelColor((float)x, 1 - (float)y, 0.5f);
                 this.LightnessEnd.Color = Colors.Black;
@@ -107,11 +152,19 @@ namespace ColorPickerUwp
             return false;
         }
 
+        private void SetColor(Color color)
+        {
+            this.settingColor = true;
+            this.Color = color;
+            this.settingColor = false;
+        }
+
         private async void MeshCanvas_Loaded(object sender, RoutedEventArgs e)
         {
             bmp3 = new WriteableBitmap(1000, 1000);
             await CreateHueCircle(0.5f);
-            this.image3.Source = bmp3;
+            this.image3.ImageSource = bmp3;
+            this.isloaded = true;
         }
 
         private Task CreateHueCircle(float lightness)
@@ -139,6 +192,7 @@ namespace ColorPickerUwp
 
         private void lightnessChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            if (settingLightness) return;
             this.UpdateColor();
         }
 

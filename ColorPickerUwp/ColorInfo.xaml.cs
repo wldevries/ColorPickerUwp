@@ -1,4 +1,7 @@
-﻿using Windows.UI;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -9,6 +12,31 @@ namespace ColorPickerUwp
         public ColorInfo()
         {
             this.InitializeComponent();
+            this.Loaded += ColorInfo_Loaded;
+        }
+
+        private void ColorInfo_Loaded(object sender, RoutedEventArgs e)
+        {
+            List<ColorViewModel> list = new List<ColorViewModel>();
+            var props = typeof(Windows.UI.Colors)
+                .GetProperties(BindingFlags.Static | BindingFlags.Public);
+            foreach(var prop in props)
+            {
+                var v = prop.GetValue(null, null);
+                if (v is Color)
+                {
+                    var c = (Color)v;
+                    var vm = new ColorViewModel()
+                    {
+                        Color = c,
+                        Name = Humanizer.StringHumanizeExtensions.Humanize(
+                            prop.Name, Humanizer.LetterCasing.LowerCase),
+                    };
+                    list.Add(vm);
+                }
+            }
+            list = list.OrderBy(c => ColorHelper.ToHSL(c.Color).X).ToList();
+            this.Colors.ItemsSource = list;
         }
 
         public Color Color
@@ -39,5 +67,16 @@ namespace ColorPickerUwp
                 }
             }
         }
+
+        private void SelectColor(object sender, ItemClickEventArgs e)
+        {
+            this.Color = (e.ClickedItem as ColorViewModel).Color;
+        }
+    }
+
+    public class ColorViewModel
+    {
+        public string Name { get; set; }
+        public Color Color { get; set; }
     }
 }

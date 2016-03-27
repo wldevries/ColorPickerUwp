@@ -5,12 +5,10 @@
     xmlns:local="using:ColorPickerUwp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400" x:Name="map">
+    mc:Ignorable="d" x:Name="map">
 
     <Grid>
-        <Border Padding="10" CornerRadius="10" BorderThickness="10">
+        <Border Padding="10" CornerRadius="10" BorderThickness="20" Width="380" Height="300">
             <Border.BorderBrush>
                 <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
             </Border.BorderBrush>
@@ -21,7 +19,22 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid>
-                    <Image Name="image3" />
+                    <!--<Image Name="image3" />-->
+                    <Grid x:Name="poly">
+                        <!--<Polygon Points="0,250 112,0 388,0 500,250 388,500 112,500"
+                                 Stroke="Purple" StrokeThickness="2">
+                            <Polygon.Fill>
+                                <ImageBrush x:Name="image3"/>
+                            </Polygon.Fill>
+                        </Polygon>-->
+
+                        <Ellipse Stretch="Uniform" x:Name="ellipse"
+                                 Stroke="Purple" StrokeThickness="2">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="image3"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
                     <Canvas>
                         <Thumb x:Name="thumb" Width="30" Height="30" Visibility="Collapsed">
                             <Thumb.Template>

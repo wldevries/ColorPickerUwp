@@ -17,18 +17,10 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Rectangle Margin="20" Grid.Row="1">
-            <Rectangle.Fill>
-                <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
-            </Rectangle.Fill>
-        </Rectangle>
-
         <local:ColorInfo x:Name="info" Margin="20" Grid.Row="1"
                          Color="{Binding Color, ElementName=map, Mode=TwoWay}"/>
 
-        <local:ColorMap x:Name="map"
-                        Margin="20"
-                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <local:ColorMap x:Name="map" Margin="20" />
 
         <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">
             <Border.BorderBrush>

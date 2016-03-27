@@ -75,20 +75,21 @@ namespace ColorPickerUwp
 
             else
             {
-                float d = max - min;
-                s = (l > 0.5f) ? d / (2.0f - max - min) : d / (max + min);
+                float delta = max - min;
+                s = (l > 0.5f) ? delta / (2.0f - max - min) : delta / (max + min);
 
                 if (r > g && r > b)
-                    h = (g - b) / d + (g < b ? 6.0f : 0.0f);
+                    h = (g - b) / delta;
 
                 else if (g > b)
-                    h = (b - r) / d + 2.0f;
+                    h = (b - r) / delta + 2.0f;
 
                 else
-                    h = (r - g) / d + 4.0f;
+                    h = (r - g) / delta + 4.0f;
 
                 h /= 6.0f;
             }
+            if (h < 0) h += 1f;
 
             return new Vector4(h, s, l, rgba.A / 255.0f);
         }
