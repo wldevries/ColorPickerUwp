@@ -22,6 +22,10 @@
                 <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
             </Rectangle.Fill>
         </Rectangle>
+
+        <local:ColorInfo x:Name="info" Margin="20" Grid.Row="1"
+                         Color="{Binding Color, ElementName=map, Mode=TwoWay}"/>
+
         <local:ColorMap x:Name="map"
                         Margin="20"
                         VerticalAlignment="Center" HorizontalAlignment="Center"/>
