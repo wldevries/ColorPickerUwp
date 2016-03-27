@@ -77,7 +77,8 @@ namespace ColorPickerUwp
             if (image3.PointerCaptures?.Any(p => p.PointerId == e.Pointer.PointerId) == true)
             {
                 this.lastPoint = e.GetCurrentPoint(this.image3);
-                if (UpdateColor())
+                var bounds = new Rect(0, 0, image3.ActualWidth, image3.ActualHeight);
+                if (bounds.Contains(lastPoint.Position) && UpdateColor())
                 {
                     thumb.SetValue(Canvas.LeftProperty, lastPoint.Position.X - thumb.ActualWidth / 2);
                     thumb.SetValue(Canvas.TopProperty, lastPoint.Position.Y - thumb.ActualHeight / 2);
@@ -130,8 +131,9 @@ namespace ColorPickerUwp
                 (float)Math.Atan2(-y, -x) + (float)Math.PI :
                 (float)Math.Atan2(y, x);
             if (saturation > 1)
-                return new Color();
-            else
+                saturation = 1;
+            // return new Color();
+            //else
                 return FromHSL(new Vector4(hue / ((float)Math.PI * 2), saturation, lightness, 1));
         }
 
@@ -147,14 +149,12 @@ namespace ColorPickerUwp
             int height = bmp.PixelHeight;
             await Task.Run(() =>
             {
+                for (int y = 0; y < width; y++)
                 {
-                    for (int y = 0; y < width; y++)
+                    for (int x = 0; x < height; x++)
                     {
-                        for (int x = 0; x < height; x++)
-                        {
-                            var color = fillPixel((float)x / width, (float)y / height);
-                            WriteBGRA(stream, color);
-                        }
+                        var color = fillPixel((float)x / width, (float)y / height);
+                        WriteBGRA(stream, color);
                     }
                 }
             });
