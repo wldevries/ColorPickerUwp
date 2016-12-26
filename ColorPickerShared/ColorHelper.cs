@@ -6,7 +6,7 @@ using System.Windows.Media;
 using Windows.UI;
 #endif
 
-namespace ColorPickerUwp
+namespace ColorPicker.Shared
 {
     public static class ColorHelper
     {

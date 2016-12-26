@@ -35,7 +35,7 @@ namespace ColorPickerUwp
                     list.Add(vm);
                 }
             }
-            list = list.OrderBy(c => ColorHelper.ToHSL(c.Color).X).ToList();
+            list = list.OrderBy(c => ColorPicker.Shared.ColorHelper.ToHSL(c.Color).X).ToList();
             this.Colors.ItemsSource = list;
         }
 

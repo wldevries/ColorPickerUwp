@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+using ColorPicker.Shared;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Input;
@@ -14,7 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using static ColorPickerUwp.ColorHelper;
+using static ColorPicker.Shared.ColorHelper;
 
 namespace ColorPickerUwp
 {
@@ -138,13 +135,13 @@ namespace ColorPickerUwp
             if (!this.isloaded) return false;
             var x = this.colorX / ellipse.ActualWidth;
             var y = 1 - this.colorY / ellipse.ActualHeight;
-            var selectedColor = CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
+            var selectedColor = HueWheel.CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
 
             if (selectedColor.A > 0)
             {
                 this.SetColor(selectedColor);
                 this.LightnessStart.Color = Colors.White;
-                this.LightnessMid.Color = CalcWheelColor((float)x, 1 - (float)y, 0.5f);
+                this.LightnessMid.Color = HueWheel.CalcWheelColor((float)x, 1 - (float)y, 0.5f);
                 this.LightnessEnd.Color = Colors.Black;
                 return true;
             }
@@ -162,66 +159,15 @@ namespace ColorPickerUwp
         private async void MeshCanvas_Loaded(object sender, RoutedEventArgs e)
         {
             bmp3 = new WriteableBitmap(1000, 1000);
-            await CreateHueCircle(0.5f);
+            await HueWheel.CreateHueCircle(bmp3, 0.5f);
             this.image3.ImageSource = bmp3;
             this.isloaded = true;
-        }
-
-        private Task CreateHueCircle(float lightness)
-        {
-            return FillBitmap(bmp3, (x, y) =>
-            {
-                return CalcWheelColor(x, y, lightness);
-            });
-        }
-
-        public static Color CalcWheelColor(float x, float y, float lightness)
-        {
-            x = x - 0.5f;
-            y = (1 - y) - 0.5f;
-            float saturation = 2 * (float)Math.Sqrt(x * x + y * y);
-            float hue = y < 0 ?
-                (float)Math.Atan2(-y, -x) + (float)Math.PI :
-                (float)Math.Atan2(y, x);
-            if (saturation > 1)
-                saturation = 1;
-            // return new Color();
-            //else
-                return FromHSL(new Vector4(hue / ((float)Math.PI * 2), saturation, lightness, 1));
         }
 
         private void lightnessChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (settingLightness) return;
             this.UpdateColor();
-        }
-
-        private static async Task FillBitmap(WriteableBitmap bmp, Func<float, float, Color> fillPixel)
-        {
-            var stream = bmp.PixelBuffer.AsStream();
-            int width = bmp.PixelWidth;
-            int height = bmp.PixelHeight;
-            await Task.Run(() =>
-            {
-                for (int y = 0; y < width; y++)
-                {
-                    for (int x = 0; x < height; x++)
-                    {
-                        var color = fillPixel((float)x / width, (float)y / height);
-                        WriteBGRA(stream, color);
-                    }
-                }
-            });
-            stream.Dispose();
-            bmp.Invalidate();
-        }
-
-        private static void WriteBGRA(Stream stream, Color color)
-        {
-            stream.WriteByte(color.B);
-            stream.WriteByte(color.G);
-            stream.WriteByte(color.R);
-            stream.WriteByte(color.A);
         }
     }
 }

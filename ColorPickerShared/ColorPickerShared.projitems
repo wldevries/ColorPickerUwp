@@ -10,5 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ColorHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HueWheel.cs" />
   </ItemGroup>
 </Project>

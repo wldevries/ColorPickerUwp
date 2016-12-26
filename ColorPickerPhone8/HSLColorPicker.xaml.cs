@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static ColorPickerUwp.ColorHelper;
+using static ColorPicker.Shared.ColorHelper;
 
 namespace ColorPickerUwp
 {

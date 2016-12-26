@@ -1,13 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Numerics;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static ColorPickerUwp.ColorHelper;
+using ColorPicker.Shared;
+using static ColorPicker.Shared.ColorHelper;
 
 namespace ColorPickerUwp
 {
@@ -81,13 +80,13 @@ namespace ColorPickerUwp
             if (lastPoint == null || image3 == null) return;
             var x = lastPoint.X / image3.ActualWidth;
             var y = 1 - lastPoint.Y / image3.ActualHeight;
-            var selectedColor = CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
+            var selectedColor = HueWheel.CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
 
             if (selectedColor.A > 0)
             {
                 this.Color = selectedColor;
                 this.LightnessStart.Color = Colors.White;
-                this.LightnessMid.Color = CalcWheelColor((float)x, 1 - (float)y, 0.5f);
+                this.LightnessMid.Color = HueWheel.CalcWheelColor((float)x, 1 - (float)y, 0.5f);
                 this.LightnessEnd.Color = Colors.Black;
             }
         }
@@ -95,56 +94,14 @@ namespace ColorPickerUwp
         private void MeshCanvas_Loaded(object sender, RoutedEventArgs e)
         {
             bmp3 = new WriteableBitmap(1000, 1000);
-            CreateHueCircle(0.5f);
+            HueWheel.CreateHueCircle(bmp3, 0.5f);
             this.image3.Source = bmp3;
         }
-
-        private void CreateHueCircle(float lightness)
-        {
-            FillBitmap(bmp3, (x, y) =>
-            {
-                return CalcWheelColor(x, y, lightness);
-            });
-        }
-
-        public static Color CalcWheelColor(float x, float y, float lightness)
-        {
-            x = x - 0.5f;
-            y = (1 - y) - 0.5f;
-            float saturation = 2 * (float)Math.Sqrt(x * x + y * y);
-            float hue = y < 0 ?
-                (float)Math.Atan2(-y, -x) + (float)Math.PI :
-                (float)Math.Atan2(y, x);
-            if (saturation > 1)
-                return new Color();
-            else
-                return FromHSL(new Vector4(hue / ((float)Math.PI * 2), saturation, lightness, 1));
-            //  return FromHSV(new Vector4(hue / (float)Math.PI * 180, saturation, lightness, 1));
-        }
-
+       
         private void lightnessChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             //this.CreateHueCircle((float)e.NewValue);
             this.UpdateColor();
-        }
-
-        private static void FillBitmap(WriteableBitmap bmp, Func<float, float, Color> fillPixel)
-        {
-            int width = bmp.PixelWidth;
-            int height = bmp.PixelHeight;
-            //await Task.Run(() =>
-            {
-                for (int y = 0; y < width; y++)
-                {
-                    for (int x = 0; x < height; x++)
-                    {
-                        Color color = fillPixel((float)x / width, (float)y / height);
-                        bmp.Pixels[x + y * width] = WriteableBitmapExtensions.ConvertColor(color);
-                    }
-                }
-            }
-            //);
-            bmp.Invalidate();
         }
     }
 }
