@@ -117,6 +117,7 @@ namespace ColorPickerUwp
                 var bounds = new Rect(0, 0, ellipse.ActualWidth, ellipse.ActualHeight);
                 if (bounds.Contains(lastPoint.Position) && UpdateColor())
                 {
+                    // todo: clamp within normalized range
                     UpdateThumb();
                     e.Handled = true;
                 }
