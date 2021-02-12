@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Numerics;
-#if SILVERLIGHT
-using System.Windows.Media;
-#else
 using Windows.UI;
-#endif
 
 namespace ColorPicker.Shared
 {

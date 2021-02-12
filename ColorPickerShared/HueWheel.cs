@@ -3,15 +3,9 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using static ColorPicker.Shared.ColorHelper;
-
-#if WINDOWS_PHONE
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-#else
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
-#endif
+using static ColorPicker.Shared.ColorHelper;
 
 namespace ColorPicker.Shared
 {
@@ -26,14 +20,9 @@ namespace ColorPicker.Shared
             });
         }
 
-
-
         public static async Task FillBitmap(WriteableBitmap bmp, Func<float, float, Color> fillPixel)
         {
-#if WINDOWS_PHONE
-#else
             var stream = bmp.PixelBuffer.AsStream();
-#endif
             int width = bmp.PixelWidth;
             int height = bmp.PixelHeight;
             await Task.Run(() =>
@@ -43,17 +32,10 @@ namespace ColorPicker.Shared
                     for (int x = 0; x < height; x++)
                     {
                         var color = fillPixel((float)x / width, (float)y / height);
-#if WINDOWS_PHONE
-                        bmp.Pixels[x + y * width] = WriteableBitmapExtensions.ConvertColor(color);
-#else
                         WriteBGRA(stream, color);
-#endif
                     }
                 }
             });
-#if !WINDOWS_PHONE
-            stream.Dispose();
-#endif
             bmp.Invalidate();
         }
 
