@@ -49,10 +49,12 @@
                         </Thumb>
                     </Canvas>
                 </Grid>
-                
+
+                <TextBlock x:Name="info" Foreground="Black" Text="initial" IsHitTestVisible="False" />
+
                 <Grid Grid.Column="1" Margin="10">
                     <Rectangle x:Name="LightnessBackground"  RadiusX="2" RadiusY="2"/>
-                    <Slider ValueChanged="lightnessChanged" Minimum="0" Maximum="1" Value="0.5"
+                    <Slider ValueChanged="LightnessChanged" Minimum="0" Maximum="1" Value="0.5"
                             x:Name="LightnessSlider" HorizontalAlignment="Center"
                             Orientation="Vertical" StepFrequency="0.05" SnapsTo="StepValues"/>
                 </Grid>

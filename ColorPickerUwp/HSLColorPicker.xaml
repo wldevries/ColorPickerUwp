@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Margin="10" x:Name="preview" Fill="{StaticResource previewBrush}"/>
-        
+
         <StackPanel Orientation="Horizontal" Grid.Column="1">
 
             <Grid Margin="10">

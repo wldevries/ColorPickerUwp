@@ -44,7 +44,7 @@ namespace ColorPickerUwp
             LightnessGradient.EndPoint = new Point(0, 1);
             LightnessStart = new GradientStop();
             LightnessMid = new GradientStop() { Offset = 0.5 };
-            LightnessEnd = new GradientStop() { Offset = 1 };
+            LightnessEnd = new GradientStop() { Color = Colors.Black, Offset = 1 };
             LightnessGradient.GradientStops = new GradientStopCollection()
             {
                 LightnessStart, LightnessMid, LightnessEnd,
@@ -86,6 +86,8 @@ namespace ColorPickerUwp
                 map.colorX = pos.X;
                 map.colorY = pos.Y;
                 map.UpdateThumb();
+
+                map.info.Text = map.Color.ToHex();
             }
         }
 
@@ -154,6 +156,7 @@ namespace ColorPickerUwp
         {
             this.settingColor = true;
             this.Color = color;
+            this.info.Text = this.Color.ToHex();
             this.settingColor = false;
         }
 
@@ -165,7 +168,7 @@ namespace ColorPickerUwp
             this.isloaded = true;
         }
 
-        private void lightnessChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private void LightnessChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (settingLightness) return;
             this.UpdateColor();

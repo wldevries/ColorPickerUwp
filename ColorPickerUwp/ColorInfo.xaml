@@ -15,20 +15,24 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="Info" Text="initial text"/>
-
+        <CheckBox x:Name="showHex"
+                  HorizontalAlignment="Right">
+            Show hex
+        </CheckBox>
+        
         <GridView Grid.Row="1" x:Name="Colors" 
                   ItemClick="SelectColor" IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderThickness="2" Height="80" Width="120">
+                    <local:ColorCard Color="{Binding Color}" ColorName="{Binding Name}" ShowHex="{Binding ElementName=showHex, Path=IsChecked}" />
+                    <!--<Border BorderThickness="2" Height="80" Width="120">
                         <Border.Background>
                             <SolidColorBrush Color="{Binding Color}"/>
                         </Border.Background>
                         <Border VerticalAlignment="Bottom" Background="#22FFFFFF">
                             <TextBlock Text="{Binding Name}" VerticalAlignment="Bottom" />
                         </Border>
-                    </Border>
+                    </Border>-->
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

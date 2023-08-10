@@ -9,18 +9,28 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <!--<ColumnDefinition/>-->
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <local:ColorInfo x:Name="info" Margin="20" Grid.Row="1"
+        <local:ColorInfo x:Name="info" Margin="20"
+                         Grid.Column="1" Grid.RowSpan="2"
+                         
                          Color="{Binding Color, ElementName=map, Mode=TwoWay}"/>
 
-        <local:ColorMap x:Name="map" Margin="20" />
+        <TextBox
+            x:Name="inputText"
+            AcceptsReturn="True"
+            Grid.Row="1" 
+            />
+
+        <local:ColorMap x:Name="map"
+                        VerticalAlignment="Top"
+                        Margin="20"  />
 
         <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">
             <Border.BorderBrush>
