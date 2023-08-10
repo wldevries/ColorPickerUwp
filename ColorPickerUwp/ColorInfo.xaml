@@ -21,7 +21,11 @@
         </CheckBox>
         
         <GridView Grid.Row="1" x:Name="Colors" 
-                  ItemClick="SelectColor" IsItemClickEnabled="True">
+                  ItemClick="SelectColor"
+                  CanReorderItems="True"
+                  CanDragItems="True"
+                  AllowDrop="True"
+                  IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <local:ColorCard Color="{Binding Color}" ColorName="{Binding Name}" ShowHex="{Binding ElementName=showHex, Path=IsChecked}" />

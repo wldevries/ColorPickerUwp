@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ColorPicker.Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -33,21 +35,57 @@ namespace ColorPickerUwp
                     break;
                 }
 
-                var words = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                // try to parse first word as a color hex value
-                if (words.Length > 0)
+                var cvm = ParseLine(line);
+                if (cvm != null && !colors.Any(c => c.Color == cvm.Color))
                 {
-                    var color = ColorPicker.Shared.ColorHelper.ParseHex(words[0]);
-                    if (color != null && !colors.Any(c => c.Color == color))
-                    {
-                        var name = string.Join(' ', words.Skip(1));
-                        colors.Add(new ColorViewModel { Color = color.Value, Name = name });
-                    }
+                    colors.Add(cvm);
                 }
             }
             while (line != null);
 
             this.info.SetColors(colors);
+        }
+
+        private static ColorViewModel ParseLine(string line)
+        {
+            var words = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            // try to parse first word as a color hex value
+            if (words.Length > 0)
+            {
+                if (ColorPicker.Shared.ColorHelper.ParseHex(words[0]) is Color color)
+                {
+                    var name = string.Join(' ', words.Skip(1));
+                    return new ColorViewModel
+                    {
+                        Color = color,
+                        Name = name,
+                        Line = line,
+                    };
+                }
+            }
+            return null;
+        }
+
+        private void SortColors(object sender, RoutedEventArgs e)
+        {
+            var lines  = this.inputText.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+
+            lines = lines
+                .Select(ParseLine)
+                .OfType<ColorViewModel>()
+                .GroupBy(vm => vm.Color)
+                .OrderBy(g => g.Key.A)
+                .ThenBy(g => g.Key.ToHex())
+                .Select(c => (color: c, hsl: ColorPicker.Shared.ColorHelper.ToHSL(c.Key)))
+                .OrderBy(c => c.hsl.X)
+                .ThenBy(c => c.hsl.Z)
+                .ThenBy(c => c.hsl.Y)
+                .Select(c => c.color)
+                .Select(g => g.FirstOrDefault(v => v.Name != "-" && v.Name != "")?.Line ?? g.First().Color.ToHex())
+                .ToList();
+
+            this.inputText.Text = string.Join(Environment.NewLine, lines);
         }
     }
 }

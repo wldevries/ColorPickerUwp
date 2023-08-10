@@ -10,6 +10,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -18,18 +19,21 @@
         </Grid.ColumnDefinitions>
 
         <local:ColorInfo x:Name="info" Margin="20"
-                         Grid.Column="1" Grid.RowSpan="2"
-                         
+                         Grid.Column="1" Grid.RowSpan="3"                         
                          Color="{Binding Color, ElementName=map, Mode=TwoWay}"/>
 
+        <Button Click="SortColors"
+                Grid.Row="1">
+            Sort
+        </Button>
+        
         <TextBox
             x:Name="inputText"
             AcceptsReturn="True"
-            Grid.Row="1" 
+            Grid.Row="2" 
             />
 
         <local:ColorMap x:Name="map"
-                        VerticalAlignment="Top"
                         Margin="20"  />
 
         <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">

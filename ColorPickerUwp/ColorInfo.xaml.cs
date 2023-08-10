@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using Windows.UI;
@@ -55,12 +56,8 @@ namespace ColorPickerUwp
 
         public void SetColors(IEnumerable<ColorViewModel> colors)
         {
-            colors = colors
-                .OrderBy(c => ColorPicker.Shared.ColorHelper.ToHSL(c.Color).X)
-                .ThenBy(c => ColorPicker.Shared.ColorHelper.ToHSL(c.Color).Y)
-                .ThenBy(c => ColorPicker.Shared.ColorHelper.ToHSL(c.Color).Z)
-                .ToList();
-            this.Colors.ItemsSource = colors;
+            var oc = new ObservableCollection<ColorViewModel>(colors);
+            this.Colors.ItemsSource = oc;
         }
     }
 }
