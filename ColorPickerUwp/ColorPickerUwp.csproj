@@ -92,13 +92,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ColorInfo.xaml.cs">
-      <DependentUpon>ColorInfo.xaml</DependentUpon>
+    <Compile Include="ViewModels\ColorGroupViewModel.cs" />
+    <Compile Include="Views\ColorGroupView.xaml.cs">
+      <DependentUpon>ColorGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ColorViewModel.cs" />
+    <Compile Include="ViewModels\ColorViewModel.cs" />
     <Compile Include="HSLColorPicker.xaml.cs">
       <DependentUpon>HSLColorPicker.xaml</DependentUpon>
     </Compile>
@@ -130,7 +131,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ColorInfo.xaml">
+    <Page Include="Views\ColorGroupView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

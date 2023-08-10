@@ -5,22 +5,24 @@
     xmlns:local="using:ColorPickerUwp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:ColorPickerUwp.Views"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" MinWidth="300"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <local:ColorInfo x:Name="info" Margin="20"
-                         Grid.Column="1" Grid.RowSpan="3"                         
-                         Color="{Binding Color, ElementName=map, Mode=TwoWay}"/>
+        <views:ColorGroupView 
+            x:Name="info"
+            Margin="20"
+            Grid.Column="1"
+            Grid.RowSpan="2" />
 
         <Button Click="SortColors"
                 Grid.Row="1">
@@ -33,8 +35,8 @@
             Grid.Row="2" 
             />
 
-        <local:ColorMap x:Name="map"
-                        Margin="20"  />
+        <!--<local:ColorMap x:Name="map"
+                        Margin="20"  />-->
 
         <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">
             <Border.BorderBrush>

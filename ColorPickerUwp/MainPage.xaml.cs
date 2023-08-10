@@ -1,6 +1,8 @@
 ﻿using ColorPicker.Shared;
+using ColorPickerUwp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Windows.UI;
@@ -20,6 +22,8 @@ namespace ColorPickerUwp
         {
             this.InitializeComponent();
             this.inputText.TextChanged += InputText_TextChanged;
+
+            this.info.DataContext = ColorGroupViewModel.CreateSystem();
         }
 
         private void InputText_TextChanged(object sender, TextChangedEventArgs e)
@@ -43,7 +47,14 @@ namespace ColorPickerUwp
             }
             while (line != null);
 
-            this.info.SetColors(colors);
+            if (colors.Any())
+            {
+                this.info.DataContext = new ColorGroupViewModel()
+                {
+                    Name = "Custom",
+                    Colors = new ObservableCollection<ColorViewModel>(colors),
+                };
+            }
         }
 
         private static ColorViewModel ParseLine(string line)
