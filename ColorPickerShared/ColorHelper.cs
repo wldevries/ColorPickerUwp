@@ -47,6 +47,20 @@ namespace ColorPicker.Shared
                 : $"#{c.A:X2}{c.R:X2}{c.G:X2}{c.B:X2}";
         }
 
+        public static Color? FromName(string name)
+        {
+            var color_props = typeof(Colors).GetProperties();
+            foreach (var c in color_props)
+            {
+                if (name.Equals(c.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return (Color)c.GetValue(null, null);
+                }
+            }
+
+            return null;
+        }
+
         #region HSL
 
         // http://stackoverflow.com/a/19338652/62857

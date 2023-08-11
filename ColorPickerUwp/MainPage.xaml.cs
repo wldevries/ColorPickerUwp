@@ -40,9 +40,22 @@ namespace ColorPickerUwp
                 }
 
                 var cvm = ColorViewModel.ParseLine(line);
-                if (cvm != null && !colors.Any(c => c.Color == cvm.Color))
+                if (cvm != null)
                 {
-                    colors.Add(cvm);
+                    var match = colors.FirstOrDefault(c =>
+                        c.Color.A == cvm.Color.A &&
+                        c.Color.R == cvm.Color.R &&
+                        c.Color.G == cvm.Color.G &&
+                        c.Color.B == cvm.Color.B);
+                    if (match == null)
+                    {
+                        colors.Add(cvm);
+                    }
+                    else
+                    {
+                        match.Name = string.IsNullOrWhiteSpace(match.Name) || match.Name.StartsWith('#')
+                            ? cvm.Name : match.Name;
+                    }
                 }
             }
             while (line != null);

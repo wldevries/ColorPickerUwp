@@ -10,7 +10,6 @@ namespace ColorPickerUwp.ViewModels
         public string Line { get; set; }
         public Color Color { get; set; }
 
-
         public static ColorViewModel ParseLine(string line)
         {
             var words = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -19,16 +18,30 @@ namespace ColorPickerUwp.ViewModels
             {
                 if (ColorPicker.Shared.ColorHelper.ParseHex(words[0]) is Color color)
                 {
-                    var name = string.Join(' ', words.Skip(1));
                     return new ColorViewModel
                     {
                         Color = color,
-                        Name = name,
+                        Name = determineName(),
+                        Line = line,
+                    };
+                }
+                else if (ColorPicker.Shared.ColorHelper.FromName(words[0]) is Color c2)
+                {
+                    return new ColorViewModel
+                    {
+                        Color = c2,
+                        Name = determineName(),
                         Line = line,
                     };
                 }
             }
             return null;
+
+            string determineName()
+            {
+                var name = string.Join(' ', words.Skip(1)).Trim();
+                return (name == "" || name == "-") ? words.FirstOrDefault() ?? string.Empty : name;
+            }
         }
     }
 }

@@ -58,8 +58,11 @@ namespace ColorPickerUwp
                 if (this.Color is Color color)
                 {
                     this.border.Background = new SolidColorBrush(color);
+
                     var hsl = ColorPicker.Shared.ColorHelper.ToHSL(color);
-                    if (hsl.Z > 0.5)
+                    // Check if contrast with black is bettar than white
+                    // https://stackoverflow.com/a/3943023/62857
+                    if ((hsl.Z + 0.05) / (0.0 + 0.05) > (1.0 + 0.05) / (hsl.Z + 0.05))
                     {
                         this.nameTextBlock.Foreground = new SolidColorBrush(Colors.Black);
                     }
