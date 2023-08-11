@@ -12,12 +12,10 @@ namespace ColorPickerUwp.Views
 {
     public sealed partial class ColorGroupView : UserControl
     {
-        private object _deletedItem;
-
         public ColorGroupView()
         {
             this.InitializeComponent();
-            this.DataContext = ColorGroupViewModel.CreateSystem();
+            this.DataContext = new ColorGroupViewModel();
         }
 
         private void TargetListView_DragOver(object sender, DragEventArgs e)
@@ -37,7 +35,6 @@ namespace ColorPickerUwp.Views
                 e.Data.Properties.Add("sourceGrid", sender as GridView);
 
                 e.Data.RequestedOperation = DataPackageOperation.Move;
-                _deletedItem = null;
             }
         }
 
@@ -106,6 +103,13 @@ namespace ColorPickerUwp.Views
         private double Distance(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
+        }
+
+        // Remove this usercontrol from it's parent
+        private void RemoveGroup(object sender, RoutedEventArgs e)
+        {
+            var parent = this.Parent as Panel;
+            parent.Children.Remove(this);
         }
     }
 }

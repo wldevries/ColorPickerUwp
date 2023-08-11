@@ -1,11 +1,9 @@
-﻿using ColorPicker.Shared;
-using ColorPickerUwp.ViewModels;
-using System;
+﻿using ColorPickerUwp.ViewModels;
+using ColorPickerUwp.Views;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -21,12 +19,14 @@ namespace ColorPickerUwp
         public MainPage()
         {
             this.InitializeComponent();
-            this.inputText.TextChanged += InputText_TextChanged;
-
-            this.info.DataContext = ColorGroupViewModel.CreateSystem();
         }
 
-        private void InputText_TextChanged(object sender, TextChangedEventArgs e)
+        private void AddGroup(object sender, RoutedEventArgs e)
+        {
+            this.colorGroupPanel.Children.Add(new ColorGroupView());
+        }
+
+        private void AddColors(object sender, RoutedEventArgs e)
         {
             List<ColorViewModel> colors = new List<ColorViewModel>();
             StringReader reader = new StringReader(this.inputText.Text);
@@ -49,34 +49,14 @@ namespace ColorPickerUwp
 
             if (colors.Any())
             {
-                this.info.DataContext = new ColorGroupViewModel()
-                {
-                    Name = "Custom",
-                    Colors = new ObservableCollection<ColorViewModel>(colors),
-                };
+                var colorGroup = new ColorGroupView();
+                    colorGroup.DataContext = new ColorGroupViewModel()
+                    {
+                        Name = "Custom",
+                        Colors = new ObservableCollection<ColorViewModel>(colors),
+                    };
+                this.colorGroupPanel.Children.Add(colorGroup);
             }
-        }
-
-        private void SortColors(object sender, RoutedEventArgs e)
-        {
-            var lines  = this.inputText.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
-
-            lines = lines
-                .Select(ColorViewModel.ParseLine)
-                .OfType<ColorViewModel>()
-                .GroupBy(vm => vm.Color)
-                .OrderBy(g => g.Key.A)
-                .ThenBy(g => g.Key.ToHex())
-                .Select(c => (color: c, hsl: ColorPicker.Shared.ColorHelper.ToHSL(c.Key)))
-                .OrderBy(c => c.hsl.X)
-                .ThenBy(c => c.hsl.Z)
-                .ThenBy(c => c.hsl.Y)
-                .Select(c => c.color)
-                .Select(g => g.FirstOrDefault(v => v.Name != "-" && v.Name != "")?.Line ?? g.First().Color.ToHex())
-                .ToList();
-
-            this.inputText.Text = string.Join(Environment.NewLine, lines);
         }
     }
 }

@@ -13,15 +13,20 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" 
-                  MinHeight="200"/>
+                  MinHeight="100"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="{Binding Name}" />
 
-        <CheckBox x:Name="showHex"
-                  HorizontalAlignment="Right">
-            Show hex
-        </CheckBox>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Click="RemoveGroup">Remove group</Button>
+            <Button Command="{Binding SortCommand}">Sort</Button>
+            
+            <CheckBox x:Name="showHex">
+                Show hex
+            </CheckBox>
+        </StackPanel>
 
         <GridView x:Name="Colors"
                   ItemsSource="{Binding Colors}"
