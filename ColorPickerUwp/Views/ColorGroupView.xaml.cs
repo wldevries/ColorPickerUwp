@@ -1,12 +1,111 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using ColorPickerUwp.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace ColorPickerUwp.Views
 {
     public sealed partial class ColorGroupView : UserControl
     {
+        private object _deletedItem;
+
         public ColorGroupView()
         {
             this.InitializeComponent();
+            this.DataContext = ColorGroupViewModel.CreateSystem();
+        }
+
+        private void TargetListView_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = e.Data.Properties.ContainsKey("sourceItem")
+                ? DataPackageOperation.Move : DataPackageOperation.None;
+        }
+
+        private void Colors_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        {
+            // The ListView is declared with selection mode set to Single.
+            // But we want the code to be robust
+            if (e.Items.Count == 1)
+            {
+                var dataItem = e.Items[0] as ColorViewModel;
+                e.Data.Properties.Add("sourceItem", dataItem);
+                e.Data.Properties.Add("sourceGrid", sender as GridView);
+
+                e.Data.RequestedOperation = DataPackageOperation.Move;
+                _deletedItem = null;
+            }
+        }
+
+        private void TargetListView_Drop(object sender, DragEventArgs e)
+        {
+            var sourceItem = e.Data.Properties.TryGetValue("sourceItem", value: out object value) ? value as ColorViewModel : null;
+            if (sourceItem is null)
+            {
+                return;
+            }
+
+            var sourceGrid = e.Data.Properties.TryGetValue("sourceGrid", value: out value) ? value as GridView : null;
+            if (sourceItem is null)
+            {
+                return;
+            }
+
+            // remove from source
+            var sourceList = sourceGrid.ItemsSource as ICollection<ColorViewModel>;
+            sourceList.Remove(sourceItem);
+
+            // add to target
+            var viewModel = this.DataContext as ColorGroupViewModel;
+            var position = e.GetPosition(this.Colors);
+
+            var elementIndex = FindClosestContainer(position, this.Colors.ItemsPanelRoot);
+
+            if (elementIndex < 0)
+            {
+                viewModel.Colors.Add(sourceItem);
+            }
+            else
+            {
+                viewModel.Colors.Insert(elementIndex, sourceItem);
+            }
+        }
+
+        private int FindClosestContainer(Point position, Panel itemsPanelRoot)
+        {
+            var children = itemsPanelRoot.Children;
+            var closestContainerIndex = -1;
+            var shortestDistance = double.PositiveInfinity;
+
+            for (var i = 0; i < children.Count; i++)
+            {
+                var container = children[i];
+                var containerPosition = container.TransformToVisual(itemsPanelRoot).TransformPoint(new Point(0, 0));
+                var containerCenter = new Point(containerPosition.X + container.ActualSize.X / 2.0, containerPosition.Y + container.ActualSize.Y / 2.0);
+                var distance = Distance(position, containerCenter);
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                    closestContainerIndex = i;
+                }
+            }
+
+            return closestContainerIndex;
+        }
+
+        /// <summary>
+        /// Calculates the absolute distance between two points
+        /// </summary>
+        /// <param name="p1">The first point</param>
+        /// <param name="p2">The second point</param>
+        /// <returns>The absolute distance between the points</returns>
+        private double Distance(Point p1, Point p2)
+        {
+            return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
         }
     }
 }

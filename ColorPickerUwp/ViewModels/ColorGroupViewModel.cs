@@ -8,6 +8,11 @@ namespace ColorPickerUwp.ViewModels
 {
     public class ColorGroupViewModel
     {
+        public ColorGroupViewModel()
+        {
+            Colors = new ObservableCollection<ColorViewModel>();                
+        }
+
         public string Name { get; set; }
         public ObservableCollection<ColorViewModel> Colors { get; set; }
 

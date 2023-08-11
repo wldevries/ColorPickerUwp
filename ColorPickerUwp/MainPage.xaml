@@ -18,11 +18,16 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <views:ColorGroupView 
-            x:Name="info"
-            Margin="20"
+        <ScrollViewer 
             Grid.Column="1"
-            Grid.RowSpan="2" />
+            Grid.RowSpan="2">
+            <StackPanel>
+        <views:ColorGroupView 
+            x:Name="info" />
+
+            <views:ColorGroupView />
+            </StackPanel>
+        </ScrollViewer>
 
         <Button Click="SortColors"
                 Grid.Row="1">

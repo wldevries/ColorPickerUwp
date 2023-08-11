@@ -39,7 +39,7 @@ namespace ColorPickerUwp
                     break;
                 }
 
-                var cvm = ParseLine(line);
+                var cvm = ColorViewModel.ParseLine(line);
                 if (cvm != null && !colors.Any(c => c.Color == cvm.Color))
                 {
                     colors.Add(cvm);
@@ -57,33 +57,13 @@ namespace ColorPickerUwp
             }
         }
 
-        private static ColorViewModel ParseLine(string line)
-        {
-            var words = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            // try to parse first word as a color hex value
-            if (words.Length > 0)
-            {
-                if (ColorPicker.Shared.ColorHelper.ParseHex(words[0]) is Color color)
-                {
-                    var name = string.Join(' ', words.Skip(1));
-                    return new ColorViewModel
-                    {
-                        Color = color,
-                        Name = name,
-                        Line = line,
-                    };
-                }
-            }
-            return null;
-        }
-
         private void SortColors(object sender, RoutedEventArgs e)
         {
             var lines  = this.inputText.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
 
             lines = lines
-                .Select(ParseLine)
+                .Select(ColorViewModel.ParseLine)
                 .OfType<ColorViewModel>()
                 .GroupBy(vm => vm.Color)
                 .OrderBy(g => g.Key.A)
