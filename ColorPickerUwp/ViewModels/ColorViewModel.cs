@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Windows.UI;
+using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerUwp.ViewModels
 {
@@ -16,7 +17,7 @@ namespace ColorPickerUwp.ViewModels
             // try to parse first word as a color hex value
             if (words.Length > 0)
             {
-                if (ColorPicker.Shared.ColorHelper.ParseHex(words[0]) is Color color)
+                if (ParseHex(words[0]) is Color color)
                 {
                     return new ColorViewModel
                     {
@@ -25,7 +26,7 @@ namespace ColorPickerUwp.ViewModels
                         Line = line,
                     };
                 }
-                else if (ColorPicker.Shared.ColorHelper.FromName(words[0]) is Color c2)
+                else if (FromName(words[0]) is Color c2)
                 {
                     return new ColorViewModel
                     {

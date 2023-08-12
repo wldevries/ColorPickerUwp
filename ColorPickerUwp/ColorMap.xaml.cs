@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ColorPickerShared;
+using System;
 using System.Linq;
 using System.Numerics;
-using ColorPicker.Shared;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Input;
@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using static ColorPicker.Shared.ColorHelper;
+using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerUwp
 {

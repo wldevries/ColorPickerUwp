@@ -1,8 +1,9 @@
-﻿using ColorPicker.Shared;
+﻿using ColorPickerShared;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerUwp
 {
@@ -59,7 +60,7 @@ namespace ColorPickerUwp
                 {
                     this.border.Background = new SolidColorBrush(color);
 
-                    var hsl = ColorPicker.Shared.ColorHelper.ToHSL(color);
+                    var hsl = ToHSL(color);
                     // Check if contrast with black is bettar than white
                     // https://stackoverflow.com/a/3943023/62857
                     if ((hsl.Z + 0.05) / (0.0 + 0.05) > (1.0 + 0.05) / (hsl.Z + 0.05))

@@ -1,12 +1,11 @@
-﻿using ColorPicker.Shared;
+﻿using ColorPickerShared;
 using Humanizer;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reflection;
-using Windows.UI;
+using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerUwp.ViewModels
 {
@@ -22,7 +21,7 @@ namespace ColorPickerUwp.ViewModels
                     .GroupBy(vm => vm.Color)
                     .OrderBy(g => g.Key.A)
                     .ThenBy(g => g.Key.ToHex())
-                    .Select(c => (color: c, hsl: ColorPicker.Shared.ColorHelper.ToHSL(c.Key)))
+                    .Select(c => (color: c, hsl: ToHSL(c.Key)))
                     .OrderBy(c => c.hsl.X)
                     .ThenBy(c => c.hsl.Z)
                     .ThenBy(c => c.hsl.Y)
@@ -43,21 +42,14 @@ namespace ColorPickerUwp.ViewModels
         public static ColorGroupViewModel CreateSystem()
         {
             List<ColorViewModel> list = new List<ColorViewModel>();
-            var props = typeof(Colors)
-                .GetProperties(BindingFlags.Static | BindingFlags.Public);
-            foreach (var prop in props)
+            foreach (var (color, name) in GetColors())
             {
-                var v = prop.GetValue(null, null);
-                if (v is Color)
+                var vm = new ColorViewModel()
                 {
-                    var c = (Color)v;
-                    var vm = new ColorViewModel()
-                    {
-                        Color = c,
-                        Name = prop.Name.Humanize(LetterCasing.LowerCase),
-                    };
-                    list.Add(vm);
-                }
+                    Color = color,
+                    Name = name.Humanize(LetterCasing.LowerCase),
+                };
+                list.Add(vm);
             }
             return new ColorGroupViewModel()
             {

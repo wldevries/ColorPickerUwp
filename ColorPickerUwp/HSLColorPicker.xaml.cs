@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
-using static ColorPicker.Shared.ColorHelper;
+using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerUwp
 {
