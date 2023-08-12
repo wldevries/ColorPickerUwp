@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Windows.UI.Xaml;
 using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerShared.ViewModels;
@@ -28,6 +29,28 @@ public partial class ColorGroupViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<ColorViewModel> colors;
+
+    public Action MoveUpAction { get; set; }
+    public Action MoveDownAction { get; set; }
+    public Action RemoveGroupAction { get; set; }
+
+    [RelayCommand]
+    private void RemoveGroup()
+    {
+        this.RemoveGroupAction?.Invoke();
+    }
+    
+    [RelayCommand]
+    private void MoveUp()
+    {
+        this.MoveUpAction?.Invoke();
+    }
+    
+    [RelayCommand]
+    private void MoveDown()
+    {
+        this.MoveDownAction?.Invoke();
+    }
 
     protected override void OnPropertyChanging(PropertyChangingEventArgs e)
     {

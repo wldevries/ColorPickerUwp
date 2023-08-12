@@ -46,10 +46,10 @@
         <CommandBar 
             x:Name="commandBar"
             Grid.Column="1"
-            Background="Transparent" DefaultLabelPosition="Right">
-            <AppBarButton Click="RemoveGroup" Label="Remove group" Icon="Remove" />
-            <AppBarButton Click="MoveUp" Label="Move up" LabelPosition="Collapsed" Icon="Upload" />
-            <AppBarButton Click="MoveDown" Label="Move down" LabelPosition="Collapsed" Icon="Download" />
+            Background="Transparent">
+            <AppBarButton Command="{Binding RemoveGroupCommand}" Label="Remove group" Icon="Delete" />
+            <AppBarButton Command="{Binding MoveUpCommand}" Label="Move up" LabelPosition="Collapsed" Icon="Upload" />
+            <AppBarButton Command="{Binding MoveDownCommand}" Label="Move down" LabelPosition="Collapsed" Icon="Download" />
             <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
             <AppBarToggleButton x:Name="showHex" Label="Show hex" />
         </CommandBar>

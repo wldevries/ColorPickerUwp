@@ -103,33 +103,6 @@ namespace ColorPickerUwp.Views
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
         }
 
-        // Remove this usercontrol from it's parent
-        private void RemoveGroup(object sender, RoutedEventArgs e)
-        {
-            var parent = this.Parent as Panel;
-            parent.Children.Remove(this);
-        }
-
-        private void MoveUp(object sender, RoutedEventArgs e)
-        {
-            var parent = this.Parent as Panel;
-            var index = parent.Children.IndexOf(this);
-            if (index > 0)
-            {
-                parent.Children.Move((uint)index, (uint)index - 1); ;
-            }
-        }
-
-        private void MoveDown(object sender, RoutedEventArgs e)
-        {
-            var parent = this.Parent as Panel;
-            var index = parent.Children.IndexOf(this);
-            if (index < parent.Children.Count - 1)
-            {
-                parent.Children.Move((uint)index, (uint)index + 1); ;
-            }
-        }
-
         private void NamePressed(object sender, PointerRoutedEventArgs e)
         {
             this.nameEdit.Visibility = Visibility.Visible;

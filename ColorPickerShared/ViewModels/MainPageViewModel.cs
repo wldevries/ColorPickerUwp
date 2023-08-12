@@ -30,6 +30,9 @@ public partial class MainPageViewModel : ObservableObject
 
     public void AddGroup(ColorGroupViewModel cgvm)
     {
+        cgvm.MoveUpAction = () => this.MoveUp(cgvm);
+        cgvm.MoveDownAction = () => this.MoveDown(cgvm);
+        cgvm.RemoveGroupAction = () => this.RemoveGroup(cgvm);
         this.Groups.Add(cgvm);
     }
 
@@ -45,5 +48,28 @@ public partial class MainPageViewModel : ObservableObject
     public async Task SuspendAsync()
     {
         await SessionSaver.SaveAsync(this.Groups);
+    }
+
+    public void RemoveGroup(ColorGroupViewModel vm)
+    {
+        this.Groups.Remove(vm);
+    }
+
+    public void MoveUp(ColorGroupViewModel vm)
+    {
+        var index = this.Groups.IndexOf(vm);
+        if (index > 0)
+        {
+            this.Groups.Move(index, index - 1); ;
+        }
+    }
+
+    public void MoveDown(ColorGroupViewModel vm)
+    {
+        var index = this.Groups.IndexOf(vm);
+        if (index < this.Groups.Count - 1)
+        {
+            this.Groups.Move(index, index + 1); ;
+        }
     }
 }
