@@ -62,6 +62,7 @@
                   Drop="TargetListView_Drop"
                   CanReorderItems="True"
                   CanDragItems="True"
+                  ItemClick="ColorClicked"
                   AllowDrop="True"
                   IsItemClickEnabled="True">
             <GridView.ItemTemplate>

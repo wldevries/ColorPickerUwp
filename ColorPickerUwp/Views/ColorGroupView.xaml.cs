@@ -154,5 +154,28 @@ namespace ColorPickerUwp.Views
                 this.nameView.Visibility = Visibility.Visible;
             }
         }
+
+        private async void ColorClicked(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as ColorViewModel;
+
+            var content = new ColorEditDialog();
+            content.Color = item.Color;
+            content.ColorName = item.Name;
+
+            var dialog = new ContentDialog();
+            dialog.Title = "Edit color";
+            dialog.PrimaryButtonText = "Update";
+            dialog.CloseButtonText = "Cancel";
+            dialog.DefaultButton = ContentDialogButton.Primary;
+            dialog.Content = content;
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                item.Color = content.Color;
+                item.Name = content.ColorName;
+            }
+        }
     }
 }
