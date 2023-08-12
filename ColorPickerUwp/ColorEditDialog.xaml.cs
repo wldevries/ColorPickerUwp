@@ -1,5 +1,4 @@
-﻿using Windows.UI;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -13,18 +12,6 @@ namespace ColorPickerUwp
         public ColorEditDialog()
         {
             this.InitializeComponent();
-        }
-
-        public string ColorName
-        {
-            get => this.colorName.Text;
-            set => this.colorName.Text = value;
-        }
-
-        public Color Color
-        {
-            get => this.colorPicker.Color;
-            set => this.colorPicker.Color = value;
         }
     }
 }
