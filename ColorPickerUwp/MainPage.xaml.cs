@@ -1,9 +1,5 @@
-﻿using ColorPickerUwp.ViewModels;
+﻿using ColorPickerShared.ViewModels;
 using ColorPickerUwp.Views;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -28,46 +24,14 @@ namespace ColorPickerUwp
 
         private void AddColors(object sender, RoutedEventArgs e)
         {
-            List<ColorViewModel> colors = new List<ColorViewModel>();
-            StringReader reader = new StringReader(this.inputText.Text);
-            string line;
-            do
-            {
-                line = reader.ReadLine();
-                if (line is null)
-                {
-                    break;
-                }
+            var cgvm = ColorGroupViewModel.FromText(this.inputText.Text);
 
-                var cvm = ColorViewModel.ParseLine(line);
-                if (cvm != null)
-                {
-                    var match = colors.FirstOrDefault(c =>
-                        c.Color.A == cvm.Color.A &&
-                        c.Color.R == cvm.Color.R &&
-                        c.Color.G == cvm.Color.G &&
-                        c.Color.B == cvm.Color.B);
-                    if (match == null)
-                    {
-                        colors.Add(cvm);
-                    }
-                    else
-                    {
-                        match.Name = string.IsNullOrWhiteSpace(match.Name) || match.Name.StartsWith('#')
-                            ? cvm.Name : match.Name;
-                    }
-                }
-            }
-            while (line != null);
-
-            if (colors.Any())
+            if (cgvm != null)
             {
-                var colorGroup = new ColorGroupView();
-                    colorGroup.DataContext = new ColorGroupViewModel()
-                    {
-                        Name = "Custom",
-                        Colors = new ObservableCollection<ColorViewModel>(colors),
-                    };
+                var colorGroup = new ColorGroupView
+                {
+                    DataContext = cgvm
+                };
                 this.colorGroupPanel.Children.Add(colorGroup);
             }
         }

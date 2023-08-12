@@ -1,12 +1,10 @@
-﻿using ColorPickerUwp.ViewModels;
+﻿using ColorPickerShared.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace ColorPickerUwp.Views
 {

@@ -92,14 +92,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ColorGroupViewModel.cs" />
     <Compile Include="Views\ColorGroupView.xaml.cs">
       <DependentUpon>ColorGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ColorMap.xaml.cs">
       <DependentUpon>ColorMap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ColorViewModel.cs" />
     <Compile Include="HSLColorPicker.xaml.cs">
       <DependentUpon>HSLColorPicker.xaml</DependentUpon>
     </Compile>
@@ -153,17 +151,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core">
-      <Version>2.14.1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.5</Version>
-    </PackageReference>
-    <PackageReference Include="ReactiveUI.Uwp">
-      <Version>18.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
