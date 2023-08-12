@@ -12,14 +12,13 @@ namespace ColorPickerShared.Services
     {
         public static async Task SaveAsync(IEnumerable<ColorGroupViewModel> groups)
         {
-            var dtos = groups.Select(g => g.ToDTO()).ToList();
-            var json = System.Text.Json.JsonSerializer.Serialize(dtos);
+            string json = Serialize(groups);
             try
             {
                 var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
                     "session.json",
                     CreationCollisionOption.ReplaceExisting);
-                
+
                 await FileIO.WriteTextAsync(file, json);
             }
             catch (Exception)
@@ -36,8 +35,7 @@ namespace ColorPickerShared.Services
                 {
                     // Load json data from sessionFile
                     var json = await FileIO.ReadTextAsync(file);
-                    var dtos = System.Text.Json.JsonSerializer.Deserialize<List<ColorGroupDTO>>(json);
-                    return dtos.Select(dto => ColorGroupViewModel.FromDTO(dto)).ToList();
+                    return Deserialize(json);
                 }
             }
             catch (Exception)
@@ -45,6 +43,19 @@ namespace ColorPickerShared.Services
             }
 
             return Array.Empty<ColorGroupViewModel>();
+        }
+
+        public static string Serialize(IEnumerable<ColorGroupViewModel> groups)
+        {
+            var dtos = groups.Select(g => g.ToDTO()).ToList();
+            var json = System.Text.Json.JsonSerializer.Serialize(dtos);
+            return json;
+        }
+
+        public static IReadOnlyCollection<ColorGroupViewModel> Deserialize(string json)
+        {
+            var dtos = System.Text.Json.JsonSerializer.Deserialize<List<ColorGroupDTO>>(json);
+            return dtos.Select(dto => ColorGroupViewModel.FromDTO(dto)).ToList();
         }
     }
 }
