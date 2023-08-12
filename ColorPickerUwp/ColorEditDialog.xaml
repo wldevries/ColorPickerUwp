@@ -14,21 +14,36 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
         
         <TextBox x:Name="colorName"
                  Text="{Binding ColorName, Mode=TwoWay}"
                  Margin="0 0 0 10"/>
 
+        <CheckBox x:Name="expert"
+                  IsChecked="False"
+                  VerticalAlignment="Top"
+                  Margin="10 0 0 0"
+                  Grid.Column="1">
+            Expert
+        </CheckBox>
+        
         <controls:ColorPicker
             x:Name="colorPicker"
             Grid.Row="1"
+            Grid.ColumnSpan="2"
             Color="{Binding Color, Mode=TwoWay}"
             ColorSpectrumShape="Box"
             IsAlphaEnabled="True"
-            IsColorSliderVisible="False"
-            IsAlphaSliderVisible="False"
             IsHexInputVisible="True"
-            IsColorChannelTextInputVisible="False"
-            IsAlphaTextInputVisible="False"/>
+            IsColorChannelTextInputVisible="{Binding ElementName=expert, Path=IsChecked}"
+            IsColorSliderVisible="{Binding ElementName=expert, Path=IsChecked}"
+            IsAlphaSliderVisible="False"
+            IsAlphaTextInputVisible="{Binding ElementName=expert, Path=IsChecked}"/>
+
     </Grid>
 </Page>
