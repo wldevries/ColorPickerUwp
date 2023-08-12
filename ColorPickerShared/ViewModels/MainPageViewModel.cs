@@ -146,4 +146,54 @@ public partial class MainPageViewModel : ObservableObject
             }
         }
     }
+
+    public string GetClipboardCss()
+    {
+        StringBuilder sb = new();
+        sb.AppendLine(":root {");
+        foreach (var group in this.Groups)
+        {
+            sb.AppendLine("    /* " + group.Name + "*/");
+            foreach (var color in group.Colors)
+            {
+                var name = canonicalize(color.Name, color.Color);
+                var colorHex = color.Color.ToHex();
+                sb.AppendLine($"    --{name}: {colorHex};");
+            }
+
+            sb.AppendLine();
+        }
+        sb.Append("}");
+
+        return sb.ToString();
+    }
+
+    static string canonicalize(string name, Color color)
+    {
+        if (name.Equals(color.ToHex(), StringComparison.OrdinalIgnoreCase))
+        {
+            name = string.Empty;
+        }
+
+        List<char> chars = name
+            .Where(c => char.IsLetterOrDigit(c) || c is '_' or '-')
+            .ToList();
+
+        if (chars.Count == 0)
+        {
+            return "color" + color.ToHex().Substring(1);
+        }
+        else
+        {
+            if (name.StartsWith("--") ||
+                (name[0] is '-' &&  char.IsDigit(name[1])) ||
+                char.IsDigit(name[0]))
+            {
+                name = "color" + name;
+            }
+
+            name = new string(chars.ToArray());
+            return name;
+        }
+    }
 }

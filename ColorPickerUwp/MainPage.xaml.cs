@@ -134,6 +134,10 @@ namespace ColorPickerUwp
                 {
                     setClipboardText(this.ViewModel.GetClipboardXaml());
                 }
+                else if (format == "css")
+                {
+                    setClipboardText(this.ViewModel.GetClipboardCss());
+                }
             }
 
             void setClipboardText(string text)
