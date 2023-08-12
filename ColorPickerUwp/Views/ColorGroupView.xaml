@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:ColorPickerShared.ViewModels"
+    x:Name="self"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance vm:ColorGroupViewModel}"
     d:DesignHeight="300"
@@ -48,10 +49,9 @@
             Grid.Column="1"
             Background="Transparent">
             <AppBarButton Command="{Binding RemoveGroupCommand}" Label="Remove group" Icon="Delete" />
-            <AppBarButton Command="{Binding MoveUpCommand}" Label="Move up" Icon="Upload" />
+            <AppBarButton x:Name="moveUpButton" Command="{Binding MoveUpCommand}" Label="Move up" Icon="Upload" />
             <AppBarButton Command="{Binding MoveDownCommand}" Label="Move down" Icon="Download" />
             <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
-            <AppBarToggleButton x:Name="showHex" Label="Show hex" Icon="Find" />
         </CommandBar>
 
         <GridView x:Name="Colors"
@@ -69,7 +69,7 @@
                 <DataTemplate>
                     <local:ColorCard Color="{Binding Color}"
                                      ColorName="{Binding Name}"
-                                     ShowHex="{Binding ElementName=showHex, Path=IsChecked}" />
+                                     ShowHex="{Binding ElementName=self, Path=ShowHex}" />
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

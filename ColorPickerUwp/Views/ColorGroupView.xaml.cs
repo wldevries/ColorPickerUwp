@@ -16,6 +16,16 @@ namespace ColorPickerUwp.Views
             this.InitializeComponent();
         }
 
+
+        public bool ShowHex
+        {
+            get { return (bool)GetValue(ShowHexProperty); }
+            set { SetValue(ShowHexProperty, value); }
+        }
+
+        public static readonly DependencyProperty ShowHexProperty =
+            DependencyProperty.Register("ShowHex", typeof(bool), typeof(ColorGroupView), new PropertyMetadata(false));
+
         private void TargetListView_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = e.Data.Properties.ContainsKey("sourceItem")
@@ -122,7 +132,8 @@ namespace ColorPickerUwp.Views
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 e.Handled = true;
-                this.showHex.Focus(FocusState.Keyboard);
+                // we do not want to highlight the remove button
+                this.moveUpButton.Focus(FocusState.Keyboard);
                 this.nameEdit.Visibility = Visibility.Collapsed;
                 this.nameView.Visibility = Visibility.Visible;
             }

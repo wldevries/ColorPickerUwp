@@ -23,13 +23,14 @@
                           ItemsSource="{Binding Groups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <views:ColorGroupView/>
+                        <views:ColorGroupView ShowHex="{Binding ElementName=showHex, Path=IsChecked}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
 
         <CommandBar IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarToggleButton x:Name="showHex" Label="Show hex" Icon="Find" />
 
             <AppBarButton Command="{Binding AddGroupCommand}"
                           Icon="Add" Label="Add empty group" />
