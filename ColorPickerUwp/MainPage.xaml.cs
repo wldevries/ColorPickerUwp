@@ -36,13 +36,25 @@ namespace ColorPickerUwp
             AddGroup(new ColorGroupViewModel() { Name = "new" });
         }
 
-        private void AddColors(object sender, RoutedEventArgs e)
+        private async void AddColors(object sender, RoutedEventArgs e)
         {
-            var cgvm = ColorGroupViewModel.FromText(this.inputText.Text);
+            var content = new ImportColorsDialog();
+            var dialog = new ContentDialog();
+            dialog.Title = "Import colors";
+            dialog.PrimaryButtonText = "Import";
+            dialog.CloseButtonText = "Cancel";
+            dialog.DefaultButton = ContentDialogButton.Primary;
+            dialog.Content = content;
 
-            if (cgvm != null)
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
             {
-                AddGroup(cgvm);
+                var cgvm = ColorGroupViewModel.FromText(content.Text);
+
+                if (cgvm != null)
+                {
+                    AddGroup(cgvm);
+                }
             }
         }
 

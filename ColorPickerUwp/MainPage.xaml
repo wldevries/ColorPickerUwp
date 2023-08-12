@@ -6,47 +6,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:ColorPickerUwp.Views"
     mc:Ignorable="d">
-
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="300"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
 
         <ScrollViewer 
-            Margin="0 30 0 0"
-            Grid.Column="1"
-            Grid.RowSpan="2">
+            Margin="20"
+            Grid.Row="1">
             <StackPanel x:Name="colorGroupPanel" />
         </ScrollViewer>
 
-        <StackPanel Orientation="Horizontal"
-                Grid.Row="0">
+        <CommandBar IsOpen="False" DefaultLabelPosition="Right">
 
-            <Button Click="AddGroup">
-                Add empty group
-            </Button>
+            <AppBarButton Click="AddGroup" Icon="Add" Label="Add empty group" />
 
-            <Button Click="AddColors">
-                Add colors
-            </Button>
+            <AppBarButton Click="AddColors" Icon="Import" Label="Import colors" />
 
-            <Button Click="AddSystem">
-                Add system
-            </Button>
+            <AppBarButton Click="AddSystem" Icon="Street" Label="Add system" />
 
-        </StackPanel>
+        </CommandBar>
         
-        <TextBox
-            x:Name="inputText"
-            AcceptsReturn="True"
-            Grid.Row="1" 
-            />
-
         <!--<local:ColorMap x:Name="map"
                         Margin="20"  />-->
 

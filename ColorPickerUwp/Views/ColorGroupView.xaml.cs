@@ -5,6 +5,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace ColorPickerUwp.Views
 {
@@ -108,6 +109,51 @@ namespace ColorPickerUwp.Views
         {
             var parent = this.Parent as Panel;
             parent.Children.Remove(this);
+        }
+
+        private void MoveUp(object sender, RoutedEventArgs e)
+        {
+            var parent = this.Parent as Panel;
+            var index = parent.Children.IndexOf(this);
+            if (index > 0)
+            {
+                parent.Children.Move((uint)index, (uint)index - 1); ;
+            }
+        }
+
+        private void MoveDown(object sender, RoutedEventArgs e)
+        {
+            var parent = this.Parent as Panel;
+            var index = parent.Children.IndexOf(this);
+            if (index < parent.Children.Count - 1)
+            {
+                parent.Children.Move((uint)index, (uint)index + 1); ;
+            }
+        }
+
+        private void NamePressed(object sender, PointerRoutedEventArgs e)
+        {
+            this.nameEdit.Visibility = Visibility.Visible;
+            this.nameView.Visibility = Visibility.Collapsed;
+            this.nameEdit.Focus(FocusState.Keyboard);
+            this.nameEdit.SelectAll();
+        }
+
+        private void NameEditEnded(object sender, RoutedEventArgs args)
+        {
+            this.nameEdit.Visibility = Visibility.Collapsed;
+            this.nameView.Visibility = Visibility.Visible;
+        }
+
+        private void NameEditKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                e.Handled = true;
+                this.showHex.Focus(FocusState.Keyboard);
+                this.nameEdit.Visibility = Visibility.Collapsed;
+                this.nameView.Visibility = Visibility.Visible;
+            }
         }
     }
 }

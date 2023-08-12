@@ -5,32 +5,58 @@
     xmlns:local="using:ColorPickerUwp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ColorPickerShared.ViewModels"
     mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance vm:ColorGroupViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" 
-                  MinHeight="100"/>
+            <RowDefinition Height="*" MinHeight="100"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Name}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-            <Button Click="RemoveGroup">Remove group</Button>
-            <Button Command="{Binding SortCommand}">Sort</Button>
+        <Grid>
+            <StackPanel x:Name="nameView"
+                        Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           PointerPressed="NamePressed"/>
+                
+                <TextBlock Text="{Binding ColorCount}"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource ButtonDisabledForegroundThemeBrush}"
+                           Style="{StaticResource NavigationViewItemHeaderTextStyle}" />
+            </StackPanel>
             
-            <CheckBox x:Name="showHex">
-                Show hex
-            </CheckBox>
-        </StackPanel>
+            <TextBox x:Name="nameEdit"
+                     Text="{Binding Name, Mode=TwoWay}"
+                     LostFocus="NameEditEnded"
+                     KeyDown="NameEditKeyDown"
+                     VerticalAlignment="Center"
+                     Visibility="Collapsed" />
+        </Grid>
+        
+        <CommandBar 
+            x:Name="commandBar"
+            Grid.Column="1"
+            Background="Transparent" DefaultLabelPosition="Right">
+            <AppBarButton Click="RemoveGroup" Label="Remove group" Icon="Remove" />
+            <AppBarButton Click="MoveUp" Label="Move up" LabelPosition="Collapsed" Icon="Upload" />
+            <AppBarButton Click="MoveDown" Label="Move down" LabelPosition="Collapsed" Icon="Download" />
+            <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
+            <AppBarToggleButton x:Name="showHex" Label="Show hex" />
+        </CommandBar>
 
         <GridView x:Name="Colors"
                   ItemsSource="{Binding Colors}"
-                  Grid.Row="1"
+                  Grid.Row="1" Grid.ColumnSpan="2"
                   DragItemsStarting="Colors_DragItemsStarting"
                   DragOver="TargetListView_DragOver"
                   Drop="TargetListView_Drop"

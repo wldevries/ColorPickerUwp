@@ -2,8 +2,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using static ColorPickerShared.ColorHelper;
@@ -14,14 +17,41 @@ public partial class ColorGroupViewModel : ObservableObject
 {
     public ColorGroupViewModel()
     {
-        colors = new ObservableCollection<ColorViewModel>();
+        Colors = new ObservableCollection<ColorViewModel>();
     }
 
     [ObservableProperty]
     private string name;
 
     [ObservableProperty]
+    private string colorCount;
+
+    [ObservableProperty]
     private ObservableCollection<ColorViewModel> colors;
+
+    protected override void OnPropertyChanging(PropertyChangingEventArgs e)
+    {
+        if (e.PropertyName == nameof(Colors) && this.Colors != null)
+        {
+            this.Colors.CollectionChanged -= Colors_CollectionChanged;
+        }
+        base.OnPropertyChanging(e);
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Colors) && this.Colors != null)
+        {
+            this.Colors.CollectionChanged += Colors_CollectionChanged;
+            this.ColorCount = $" ({this.Colors.Count})";
+        }
+        base.OnPropertyChanged(e);
+    }
+
+    private void Colors_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        this.ColorCount = $" ({this.Colors.Count})";
+    }
 
     [RelayCommand]
     private void Sort()
