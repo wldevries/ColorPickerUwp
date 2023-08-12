@@ -5,7 +5,9 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -116,6 +118,32 @@ namespace ColorPickerUwp
                 {
                     this.ViewModel.Groups.Remove(cgvm);
                 }
+            }
+        }
+
+        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem selectedItem)
+            {
+                string format = selectedItem.Tag.ToString();
+                if (format == "text")
+                {
+                    setClipboardText(this.ViewModel.GetClipboardText());
+                }
+                else if (format == "xaml")
+                {
+                    setClipboardText(this.ViewModel.GetClipboardXaml());
+                }
+            }
+
+            void setClipboardText(string text)
+            {
+                var package = new DataPackage
+                {
+                    RequestedOperation = DataPackageOperation.Copy,
+                };
+                package.SetText(text);
+                Clipboard.SetContent(package);
             }
         }
     }

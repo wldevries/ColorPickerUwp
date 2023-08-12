@@ -43,6 +43,15 @@
 
             <AppBarButton Click="Save" Icon="Save" Label="Save" />
             <AppBarButton Click="Load" Icon="OpenLocal" Label="Load" />
+            <AppBarButton Icon="Copy" Label="Copy to clipboard">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="As text" Click="CopyToClipboard" Tag="text"/>
+                        <MenuFlyoutItem Text="As xaml" Click="CopyToClipboard" Tag="xaml"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+
+            </AppBarButton>
         </CommandBar>
         
         <!--<local:ColorMap x:Name="map"
