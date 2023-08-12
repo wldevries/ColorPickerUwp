@@ -21,10 +21,7 @@
             Margin="0 30 0 0"
             Grid.Column="1"
             Grid.RowSpan="2">
-            <StackPanel x:Name="colorGroupPanel">
-
-                <views:ColorGroupView />
-            </StackPanel>
+            <StackPanel x:Name="colorGroupPanel" />
         </ScrollViewer>
 
         <StackPanel Orientation="Horizontal"
@@ -36,6 +33,10 @@
 
             <Button Click="AddColors">
                 Add colors
+            </Button>
+
+            <Button Click="AddSystem">
+                Add system
             </Button>
 
         </StackPanel>

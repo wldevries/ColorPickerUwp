@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ColorPickerShared.DTO;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Linq;
 using Windows.UI;
@@ -49,5 +50,19 @@ public partial class ColorViewModel : ObservableObject
             var name = string.Join(" ", words.Skip(1)).Trim();
             return (name == "" || name == "-") ? words.FirstOrDefault() ?? string.Empty : name;
         }
+    }
+
+    internal ColorDTO ToDTO()
+    {
+        return new() { Name = this.Name, Color = this.Color.ToHex() };
+    }
+
+    internal static ColorViewModel FromDTO(ColorDTO dto)
+    {
+        return new()
+        {
+            Name = dto.Name,
+            Color = ParseHex(dto.Color) ?? Colors.Transparent,
+        };
     }
 }

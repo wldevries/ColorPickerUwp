@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ColorPickerShared.DTO;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Humanizer;
 using System.Collections.Generic;
@@ -99,6 +100,24 @@ public partial class ColorGroupViewModel : ObservableObject
         {
             Name = "System",
             Colors = new ObservableCollection<ColorViewModel>(list),
+        };
+    }
+
+    internal ColorGroupDTO ToDTO()
+    {
+        return new()
+        {
+            Name = this.Name,
+            Colors = this.Colors.Select(c => c.ToDTO()).ToList(),
+        };
+    }
+
+    internal static ColorGroupViewModel FromDTO(ColorGroupDTO dto)
+    {
+        return new()
+        {
+            Name = dto.Name,
+            Colors = new(dto.Colors.Select(dto => ColorViewModel.FromDTO(dto))),
         };
     }
 }
