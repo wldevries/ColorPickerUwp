@@ -60,7 +60,9 @@ public partial class MainPageViewModel : ObservableObject
         var index = this.Groups.IndexOf(vm);
         if (index > 0)
         {
-            this.Groups.Move(index, index - 1); ;
+            // ItemsControl becomes weirdly slow when using Move
+            this.Groups.Remove(vm);
+            this.Groups.Insert(index - 1, vm);
         }
     }
 
@@ -69,7 +71,9 @@ public partial class MainPageViewModel : ObservableObject
         var index = this.Groups.IndexOf(vm);
         if (index < this.Groups.Count - 1)
         {
-            this.Groups.Move(index, index + 1); ;
+            // ItemsControl becomes weirdly slow when using Move
+            this.Groups.Remove(vm);
+            this.Groups.Insert(index + 1, vm);
         }
     }
 }

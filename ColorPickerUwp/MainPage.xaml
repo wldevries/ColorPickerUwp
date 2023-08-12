@@ -17,9 +17,9 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer 
-            Margin="20"
             Grid.Row="1">
             <ItemsControl x:Name="colorGroupPanel"
+                          Margin="20"
                           ItemsSource="{Binding Groups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

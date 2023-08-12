@@ -48,10 +48,10 @@
             Grid.Column="1"
             Background="Transparent">
             <AppBarButton Command="{Binding RemoveGroupCommand}" Label="Remove group" Icon="Delete" />
-            <AppBarButton Command="{Binding MoveUpCommand}" Label="Move up" LabelPosition="Collapsed" Icon="Upload" />
-            <AppBarButton Command="{Binding MoveDownCommand}" Label="Move down" LabelPosition="Collapsed" Icon="Download" />
+            <AppBarButton Command="{Binding MoveUpCommand}" Label="Move up" Icon="Upload" />
+            <AppBarButton Command="{Binding MoveDownCommand}" Label="Move down" Icon="Download" />
             <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
-            <AppBarToggleButton x:Name="showHex" Label="Show hex" />
+            <AppBarToggleButton x:Name="showHex" Label="Show hex" Icon="Find" />
         </CommandBar>
 
         <GridView x:Name="Colors"
