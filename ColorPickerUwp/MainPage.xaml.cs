@@ -1,6 +1,6 @@
 ﻿using ColorPickerShared.Services;
 using ColorPickerShared.ViewModels;
-using ColorPickerUwp.Views;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -27,21 +27,20 @@ namespace ColorPickerUwp
             this.InitializeComponent();
         }
 
+        public MainPageViewModel ViewModel => this.DataContext as MainPageViewModel;
+
+        public async Task Suspend()
+        {
+            await this.ViewModel.SuspendAsync();
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var vms = await SessionSaver.LoadAsync();
-            foreach (var vm in vms)
-            {
-                this.AddGroup(vm);
-            }
+            this.DataContext = new MainPageViewModel();
+            await this.ViewModel.RestoreAsync();
         }
 
-        private void AddGroup(object sender, RoutedEventArgs e)
-        {
-            AddGroup(new ColorGroupViewModel() { Name = "new" });
-        }
-
-        private async void AddColors(object sender, RoutedEventArgs e)
+        private async void ImportColors(object sender, RoutedEventArgs e)
         {
             var content = new ImportColorsDialog();
             var dialog = new ContentDialog();
@@ -58,19 +57,9 @@ namespace ColorPickerUwp
 
                 if (cgvm != null)
                 {
-                    AddGroup(cgvm);
+                    this.ViewModel.AddGroup(cgvm);
                 }
             }
-        }
-
-        private void AddSystem(object sender, RoutedEventArgs e)
-        {
-            AddGroup(ColorGroupViewModel.CreateSystem());
-        }
-
-        internal async Task Save()
-        {
-            await SessionSaver.SaveAsync(GetGroups());
         }
 
         private async void Save(object sender, RoutedEventArgs e)
@@ -88,7 +77,7 @@ namespace ColorPickerUwp
                 CachedFileManager.DeferUpdates(file);
 
                 // write to file
-                await FileIO.WriteTextAsync(file, SessionSaver.Serialize(GetGroups()));
+                await FileIO.WriteTextAsync(file, SessionSaver.Serialize(this.ViewModel.Groups));
 
                 // Let Windows know that we're finished changing the file so
                 // the other app can update the remote version of the file.
@@ -113,43 +102,21 @@ namespace ColorPickerUwp
             var file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var currentGroups = GetGroups().ToList();
+                var currentGroups = this.ViewModel.Groups.ToList();
 
                 var json = await FileIO.ReadTextAsync(file);
                 var vms = SessionSaver.Deserialize(json);
                 foreach (var vm in vms)
                 {
-                    this.AddGroup(vm);
+                    this.ViewModel.AddGroup(vm);
                 }
 
                 // Remove current groups after loading succeeded
                 foreach (var cgvm in currentGroups)
                 {
-                    foreach (var group in this.colorGroupPanel.Children.OfType<FrameworkElement>().ToList())
-                    {
-                        if (currentGroups.Contains(group.DataContext))
-                        {
-                            this.colorGroupPanel.Children.Remove(group);
-                        }
-                    }
+                    this.ViewModel.Groups.Remove(cgvm);
                 }
             }
-        }
-
-        private void AddGroup(ColorGroupViewModel cgvm)
-        {
-            var colorGroup = new ColorGroupView
-            {
-                DataContext = cgvm
-            };
-            this.colorGroupPanel.Children.Add(colorGroup);
-        }
-
-        private IEnumerable<ColorGroupViewModel> GetGroups()
-        {
-            return this.colorGroupPanel.Children
-                .OfType<FrameworkElement>()
-                .Select(cgv => cgv.DataContext as ColorGroupViewModel);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace ColorPickerUwp.Views
         public ColorGroupView()
         {
             this.InitializeComponent();
-            this.DataContext = new ColorGroupViewModel();
         }
 
         private void TargetListView_DragOver(object sender, DragEventArgs e)

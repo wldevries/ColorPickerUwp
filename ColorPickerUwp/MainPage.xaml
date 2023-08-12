@@ -4,7 +4,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ColorPickerShared.ViewModels"
+    xmlns:views="using:ColorPickerUwp.Views"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    d:DataContext="{d:DesignInstance vm:MainPageViewModel}"
     mc:Ignorable="d">
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -16,16 +19,26 @@
         <ScrollViewer 
             Margin="20"
             Grid.Row="1">
-            <StackPanel x:Name="colorGroupPanel" />
+            <ItemsControl x:Name="colorGroupPanel"
+                          ItemsSource="{Binding Groups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <views:ColorGroupView/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <CommandBar IsOpen="False" DefaultLabelPosition="Right">
 
-            <AppBarButton Click="AddGroup" Icon="Add" Label="Add empty group" />
+            <AppBarButton Command="{Binding AddGroupCommand}"
+                          Icon="Add" Label="Add empty group" />
 
-            <AppBarButton Click="AddColors" Icon="Import" Label="Import colors" />
+            <AppBarButton Click="ImportColors"
+                          Icon="Import" Label="Import colors" />
 
-            <AppBarButton Click="AddSystem" Icon="Street" Label="Add system" />
+            <AppBarButton Command="{Binding AddSystemCommand}"
+                          Icon="Street" Label="Add system" />
 
             <AppBarButton Click="Save" Icon="Save" Label="Save" />
             <AppBarButton Click="Load" Icon="OpenLocal" Label="Load" />

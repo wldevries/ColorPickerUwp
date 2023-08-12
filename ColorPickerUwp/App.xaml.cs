@@ -92,7 +92,7 @@ namespace ColorPickerUwp
             Frame rootFrame = Window.Current.Content as Frame;
             if (rootFrame.Content is MainPage page)
             {
-                await page.Save();
+                await page.Suspend();
             }
 
             deferral.Complete();
