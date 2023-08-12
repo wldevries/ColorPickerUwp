@@ -9,7 +9,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using Windows.UI.Xaml;
 using static ColorPickerShared.ColorHelper;
 
 namespace ColorPickerShared.ViewModels;

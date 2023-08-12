@@ -48,10 +48,11 @@
             x:Name="commandBar"
             Grid.Column="1"
             Background="Transparent">
-            <AppBarButton Command="{Binding RemoveGroupCommand}" Label="Remove group" Icon="Delete" />
+            <AppBarButton Click="AddColor" Label="Add" Icon="Add" />
+            <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
             <AppBarButton x:Name="moveUpButton" Command="{Binding MoveUpCommand}" Label="Move up" Icon="Upload" />
             <AppBarButton Command="{Binding MoveDownCommand}" Label="Move down" Icon="Download" />
-            <AppBarButton Command="{Binding SortCommand}" Label="Sort" Icon="Sort" />
+            <AppBarButton Command="{Binding RemoveGroupCommand}" Label="Remove group" Icon="Delete" />
         </CommandBar>
 
         <GridView x:Name="Colors"
@@ -62,14 +63,25 @@
                   Drop="TargetListView_Drop"
                   CanReorderItems="True"
                   CanDragItems="True"
-                  ItemClick="ColorClicked"
                   AllowDrop="True"
                   IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <local:ColorCard Color="{Binding Color}"
+                    <Button Padding="0" BorderThickness="0"
+                            VerticalContentAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Height="80" Width="120">
+
+                        <local:ColorCard Color="{Binding Color}"
                                      ColorName="{Binding Name}"
                                      ShowHex="{Binding ElementName=self, Path=ShowHex}" />
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Icon="Edit" Text="Edit" Click="EditColor_Click" />
+                                <MenuFlyoutItem Icon="Delete" Text="Remove" Click="RemoveColor_Click" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

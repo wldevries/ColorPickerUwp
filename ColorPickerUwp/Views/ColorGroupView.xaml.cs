@@ -1,11 +1,13 @@
 ﻿using ColorPickerShared.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using static ColorPickerShared.PointHelper;
 
 namespace ColorPickerUwp.Views
 {
@@ -16,6 +18,7 @@ namespace ColorPickerUwp.Views
             this.InitializeComponent();
         }
 
+        public ColorGroupViewModel ViewModel => this.DataContext as ColorGroupViewModel;
 
         public bool ShowHex
         {
@@ -128,27 +131,58 @@ namespace ColorPickerUwp.Views
             }
         }
 
-        private async void ColorClicked(object sender, ItemClickEventArgs e)
+        private async void EditColor_Click(object sender, RoutedEventArgs e)
         {
-            var item = e.ClickedItem as ColorViewModel;
+            var item = ((FrameworkElement)sender).DataContext as ColorViewModel;
+            await EditColor(item);
+        }
 
-            var content = new ColorEditDialog();
-            content.Color = item.Color;
-            content.ColorName = item.Name;
+        private void RemoveColor_Click(object sender, RoutedEventArgs e)
+        {
+            var item = ((FrameworkElement)sender).DataContext as ColorViewModel;
+            this.ViewModel.Colors.Remove(item);
+        }
+
+        private async void AddColor(object sender, RoutedEventArgs e)
+        {
+            var item = new ColorViewModel()
+            {
+                Name = "New color",
+                Color = Windows.UI.Colors.CornflowerBlue,
+            };
+            if (await EditColor(item, "Add color", "Add"))
+            {
+                this.ViewModel.Colors.Add(item);
+            }
+        }
+
+        private static async Task<bool> EditColor(ColorViewModel item, string title = "Edit color", string primaryAction = "Update")
+        {
+            var editvm = new ColorEditViewModel()
+            {
+                Color = item.Color,
+                ColorName = item.Name ?? "",
+            };
 
             var dialog = new ContentDialog();
-            dialog.Title = "Edit color";
-            dialog.PrimaryButtonText = "Update";
+            dialog.Title = title;
+            dialog.PrimaryButtonText = primaryAction;
             dialog.CloseButtonText = "Cancel";
             dialog.DefaultButton = ContentDialogButton.Primary;
-            dialog.Content = content;
+            dialog.Content = new ColorEditDialog()
+            {
+                DataContext = editvm,
+            };
 
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                item.Color = content.Color;
-                item.Name = content.ColorName;
+                item.Color = editvm.Color;
+                item.Name = editvm.ColorName;
+                return true;
             }
+
+            return false;
         }
     }
 }

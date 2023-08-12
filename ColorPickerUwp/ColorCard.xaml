@@ -5,13 +5,13 @@
     xmlns:local="using:ColorPickerUwp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Height="80" Width="120">
+    mc:Ignorable="d">
 
-    <Border x:Name="border"
-            BorderThickness="2">
+    <Border x:Name="border">
         <Border x:Name="textBorder"
-                VerticalAlignment="Bottom" Background="#22FFFFFF">
+                Padding="4 2"
+                VerticalAlignment="Bottom"
+                Background="#22FFFFFF">
             <TextBlock x:Name="nameTextBlock"
                        VerticalAlignment="Bottom" />
         </Border>
