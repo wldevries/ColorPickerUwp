@@ -11,8 +11,9 @@
         <Border x:Name="textBorder"
                 Padding="4 2"
                 VerticalAlignment="Bottom"
-                Background="#22FFFFFF">
+                Background="#33FFFFFF">
             <TextBlock x:Name="nameTextBlock"
+                       TextTrimming="CharacterEllipsis"
                        VerticalAlignment="Bottom" />
         </Border>
     </Border>

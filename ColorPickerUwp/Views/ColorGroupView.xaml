@@ -58,6 +58,7 @@
         <GridView x:Name="Colors"
                   ItemsSource="{Binding Colors}"
                   Grid.Row="1" Grid.ColumnSpan="2"
+                  ItemClick="ColorClicked"
                   DragItemsStarting="Colors_DragItemsStarting"
                   DragOver="TargetListView_DragOver"
                   Drop="TargetListView_Drop"
@@ -67,21 +68,19 @@
                   IsItemClickEnabled="True">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Button Padding="0" BorderThickness="0"
-                            VerticalContentAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            Height="80" Width="120">
+                    <Border CornerRadius="5"
+                            Height="70" Width="96">
 
                         <local:ColorCard Color="{Binding Color}"
                                      ColorName="{Binding Name}"
                                      ShowHex="{Binding ElementName=self, Path=ShowHex}" />
-                        <Button.Flyout>
+                        <FlyoutBase.AttachedFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Icon="Edit" Text="Edit" Click="EditColor_Click" />
                                 <MenuFlyoutItem Icon="Delete" Text="Remove" Click="RemoveColor_Click" />
                             </MenuFlyout>
-                        </Button.Flyout>
-                    </Button>
+                        </FlyoutBase.AttachedFlyout>
+                    </Border>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

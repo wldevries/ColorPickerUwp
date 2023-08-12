@@ -1,4 +1,5 @@
 ﻿using ColorPickerShared.ViewModels;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +7,9 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using static ColorPickerShared.PointHelper;
 
 namespace ColorPickerUwp.Views
@@ -183,6 +186,15 @@ namespace ColorPickerUwp.Views
             }
 
             return false;
+        }
+
+        private void ColorClicked(object sender, ItemClickEventArgs e)
+        {
+            var gridview = (GridView)sender;
+            var container = gridview.ContainerFromIndex(gridview.Items.IndexOf(e.ClickedItem));
+            var control = container.FindDescendant<Border>();
+
+            FlyoutBase.ShowAttachedFlyout(control);
         }
     }
 }
