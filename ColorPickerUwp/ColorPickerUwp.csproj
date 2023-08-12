@@ -159,6 +159,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.8.5</Version>
+    </PackageReference>
     <PackageReference Include="ReactiveUI.Uwp">
       <Version>18.4.1</Version>
     </PackageReference>
