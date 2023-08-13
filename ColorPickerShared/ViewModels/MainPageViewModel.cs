@@ -4,16 +4,13 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Windows.Gaming.Input;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Xaml.Controls.Primitives;
 
 namespace ColorPickerShared.ViewModels;
 
@@ -206,7 +203,9 @@ public partial class MainPageViewModel : ObservableObject
 
         StringBuilder sb = new();
         sb.Append("<!DOCTYPE html>");
-        sb.AppendLine("<html><head><title>Color palette</title><style>");
+        sb.AppendLine("<html><head><title>Color palette</title>");
+        sb.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
+        sb.AppendLine("<style>");
         sb.AppendLine(css);
         sb.AppendLine("</style></head><body>");
 
