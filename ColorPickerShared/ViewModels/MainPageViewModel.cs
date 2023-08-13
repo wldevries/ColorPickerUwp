@@ -205,7 +205,8 @@ public partial class MainPageViewModel : ObservableObject
         var css = await ReadExportCSS();
 
         StringBuilder sb = new();
-        sb.AppendLine("<html><head><style>");
+        sb.Append("<!DOCTYPE html>");
+        sb.AppendLine("<html><head><title>Color palette</title><style>");
         sb.AppendLine(css);
         sb.AppendLine("</style></head><body>");
 
@@ -215,9 +216,9 @@ public partial class MainPageViewModel : ObservableObject
             sb.AppendLine("<div class=\"palette-container\">");
             foreach (var color in group.Colors)
             {
-                var name = color.Name;
+                var name = color.Name.Equals(color.Color.ToHex(), StringComparison.OrdinalIgnoreCase) ? "" : " " + color.Name;
                 var colorHex = color.Color.ToHexWeb();
-                sb.AppendLine($"<div class=\"color-rect\" style=\"background: {colorHex};\"><div class=\"color-name\">{name}</div></div>");
+                sb.AppendLine($"<div class=\"color-rect\" style=\"background: {colorHex};\"><div class=\"color-name\">{colorHex} {name}</div></div>");
             }
             sb.AppendLine("</div>");
         }
