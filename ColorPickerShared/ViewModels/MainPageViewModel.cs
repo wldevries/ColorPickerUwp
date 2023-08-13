@@ -4,11 +4,14 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Windows.Gaming.Input;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -157,7 +160,7 @@ public partial class MainPageViewModel : ObservableObject
             foreach (var color in group.Colors)
             {
                 var name = canonicalize(color.Name, color.Color);
-                var colorHex = color.Color.ToHex();
+                var colorHex = color.Color.ToHexWeb();
                 sb.AppendLine($"    --{name}: {colorHex};");
             }
 
@@ -166,34 +169,71 @@ public partial class MainPageViewModel : ObservableObject
         sb.Append("}");
 
         return sb.ToString();
-    }
 
-    static string canonicalize(string name, Color color)
-    {
-        if (name.Equals(color.ToHex(), StringComparison.OrdinalIgnoreCase))
+        string canonicalize(string name, Color color)
         {
-            name = string.Empty;
-        }
-
-        List<char> chars = name
-            .Where(c => char.IsLetterOrDigit(c) || c is '_' or '-')
-            .ToList();
-
-        if (chars.Count == 0)
-        {
-            return "color" + color.ToHex().Substring(1);
-        }
-        else
-        {
-            if (name.StartsWith("--") ||
-                (name[0] is '-' &&  char.IsDigit(name[1])) ||
-                char.IsDigit(name[0]))
+            if (name.Equals(color.ToHex(), StringComparison.OrdinalIgnoreCase))
             {
-                name = "color" + name;
+                name = string.Empty;
             }
 
-            name = new string(chars.ToArray());
-            return name;
+            List<char> chars = name
+                .Where(c => char.IsLetterOrDigit(c) || c is '_' or '-')
+                .ToList();
+
+            if (chars.Count == 0)
+            {
+                return "color" + color.ToHex().Substring(1);
+            }
+            else
+            {
+                if (name.StartsWith("--") ||
+                    (name[0] is '-' && char.IsDigit(name[1])) ||
+                    char.IsDigit(name[0]))
+                {
+                    name = "color" + name;
+                }
+
+                name = new string(chars.ToArray());
+                return name;
+            }
+        }
+    }
+
+    public async Task<string> GetClipboardHtml()
+    {
+        var css = await ReadExportCSS();
+
+        StringBuilder sb = new();
+        sb.AppendLine("<html><head><style>");
+        sb.AppendLine(css);
+        sb.AppendLine("</style></head><body>");
+
+        foreach (var group in this.Groups)
+        {
+            sb.AppendLine($"<div class=\"palette-header\">{group.Name}</div>");
+            sb.AppendLine("<div class=\"palette-container\">");
+            foreach (var color in group.Colors)
+            {
+                var name = color.Name;
+                var colorHex = color.Color.ToHexWeb();
+                sb.AppendLine($"<div class=\"color-rect\" style=\"background: {colorHex};\"><div class=\"color-name\">{name}</div></div>");
+            }
+            sb.AppendLine("</div>");
+        }
+
+        sb.AppendLine("</body></html>");
+        return sb.ToString();
+    }
+
+    private async Task<string> ReadExportCSS()
+    {
+        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///htmlexport.css"));
+        using (var inputStream = await file.OpenReadAsync())
+        using (var classicStream = inputStream.AsStreamForRead())
+        using (var streamReader = new StreamReader(classicStream))
+        {
+            return await streamReader.ReadToEndAsync();
         }
     }
 }

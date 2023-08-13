@@ -144,7 +144,7 @@ namespace ColorPickerUwp
             }
         }
 
-        private void CopyToClipboard(object sender, RoutedEventArgs e)
+        private async void CopyToClipboard(object sender, RoutedEventArgs e)
         {
             if (sender is MenuFlyoutItem selectedItem)
             {
@@ -160,6 +160,10 @@ namespace ColorPickerUwp
                 else if (format == "css")
                 {
                     setClipboardText(this.ViewModel.GetClipboardCss());
+                }
+                else if (format == "html")
+                {
+                    setClipboardText(await this.ViewModel.GetClipboardHtml());
                 }
             }
 

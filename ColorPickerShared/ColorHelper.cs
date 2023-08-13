@@ -74,4 +74,11 @@ public static partial class ColorHelper
             ? $"#{c.R:X2}{c.G:X2}{c.B:X2}"
             : $"#{c.A:X2}{c.R:X2}{c.G:X2}{c.B:X2}";
     }
+
+    public static string ToHexWeb(this Color c)
+    {
+        return c.A == 255
+            ? $"#{c.R:X2}{c.G:X2}{c.B:X2}"
+            : $"#{c.R:X2}{c.G:X2}{c.B:X2}{c.A:X2}";
+    }
 }

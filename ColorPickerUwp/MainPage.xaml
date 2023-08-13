@@ -49,6 +49,7 @@
                         <MenuFlyoutItem Text="As text" Click="CopyToClipboard" Tag="text"/>
                         <MenuFlyoutItem Text="As xaml" Click="CopyToClipboard" Tag="xaml"/>
                         <MenuFlyoutItem Text="As css" Click="CopyToClipboard" Tag="css"/>
+                        <MenuFlyoutItem Text="As html" Click="CopyToClipboard" Tag="html"/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
 

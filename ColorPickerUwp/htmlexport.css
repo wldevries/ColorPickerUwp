@@ -1,0 +1,45 @@
+body {
+    background: #202020;
+    padding: 40px 60px;
+    margin: 0px;
+}
+
+.palette-header {
+    font-size: 32px;
+    font-family: Helvetica;
+    font-weight: 500;
+    color: #D8D8D8;
+    margin: 30px 0 10px 0;
+}
+
+.palette-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-auto-rows: 80px;
+    gap: 5px;
+}
+
+.color-rect {
+    border-radius: 5px;
+    position: relative;
+}
+
+.color-name {
+    background: #FFFFFF44;
+    color: #101010;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2px 4px;
+    font-family: Helvetica;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.color-name:hover {
+    text-overflow: clip;
+    white-space: normal;
+    word-break: break-all;
+}
