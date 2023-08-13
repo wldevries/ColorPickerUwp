@@ -54,18 +54,11 @@
 
             </AppBarButton>
         </CommandBar>
-        
-        <!--<local:ColorMap x:Name="map"
-                        Margin="20"  />-->
-
-        <!--<Border Margin="50" CornerRadius="10" BorderThickness="5">
-            <Border.BorderBrush>
-                <SolidColorBrush Color="{Binding Path=Color, ElementName=picker}"/>
-            </Border.BorderBrush>
-            <local:HSLColorPicker x:Name="picker"/>
-        </Border>-->
 
         <muxc:InfoBar x:Name="infoBar"
+                      VerticalAlignment="Bottom"
+                      HorizontalAlignment="Right"
+                      Margin="10"
                       Grid.RowSpan="2" />
     </Grid>
 </Page>

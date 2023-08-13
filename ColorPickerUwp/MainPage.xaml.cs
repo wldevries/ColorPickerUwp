@@ -1,12 +1,12 @@
-﻿using ColorPickerShared.Services;
+﻿using ColorPickerShared;
+using ColorPickerShared.Services;
 using ColorPickerShared.ViewModels;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -39,7 +39,15 @@ namespace ColorPickerUwp
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             this.DataContext = new MainPageViewModel();
-            await this.ViewModel.RestoreAsync();
+
+            if (e.Parameter is FileActivatedEventArgs fae && fae.Files.FirstOrDefault() is IStorageFile file)
+            {
+                await this.LoadFromFile(file);
+            }
+            else
+            {
+                await this.ViewModel.RestoreAsync();
+            }
         }
 
         private async void ImportColors(object sender, RoutedEventArgs e)
@@ -68,7 +76,7 @@ namespace ColorPickerUwp
         {
             var savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            savePicker.FileTypeChoices.Add("Palette", new List<string>() { ".wpj" });
+            savePicker.FileTypeChoices.Add("Palette", new List<string>() { Constants.FileExtension });
             savePicker.SuggestedFileName = "New palette";
 
             var file = await savePicker.PickSaveFileAsync();
@@ -99,15 +107,23 @@ namespace ColorPickerUwp
         {
             var openPicker = new FileOpenPicker();
             openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-            openPicker.FileTypeFilter.Add(".wpj");
+            openPicker.FileTypeFilter.Add(Constants.FileExtension);
 
             var file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var currentGroups = this.ViewModel.Groups.ToList();
+                await LoadFromFile(file);
+            }
+        }
 
+        private async Task LoadFromFile(IStorageFile file)
+        {
+            var currentGroups = this.ViewModel.Groups.ToList();
+            try
+            {
                 var json = await FileIO.ReadTextAsync(file);
                 var vms = SessionSaver.Deserialize(json);
+
                 foreach (var vm in vms)
                 {
                     this.ViewModel.AddGroup(vm);
@@ -118,6 +134,13 @@ namespace ColorPickerUwp
                 {
                     this.ViewModel.Groups.Remove(cgvm);
                 }
+            }
+            catch (Exception)
+            {
+                this.infoBar.IsOpen = true;
+                this.infoBar.Title = "Open palette";
+                this.infoBar.Message = "File " + file.Name + " couldn't be opened.";
+                this.infoBar.Severity = InfoBarSeverity.Error;
             }
         }
 
